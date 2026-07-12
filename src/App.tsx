@@ -1,7 +1,9 @@
 import { AnimatePresence } from 'framer-motion'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Toaster } from 'sonner'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useAppStore } from './store/appStore'
+import { useAuthStore } from './store/authStore'
 import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -22,7 +24,20 @@ import PlansPage from './pages/PlansPage'
 import ProfilePage from './pages/ProfilePage'
 import SettingsPage from './pages/SettingsPage'
 import AdminPage from './pages/AdminPage'
- 
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuthStore()
+  if (!isAuthenticated) return <Navigate to="/login" replace />
+  return <>{children}</>
+}
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isAuthenticated } = useAuthStore()
+  if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (user?.role !== 'admin') return <Navigate to="/dashboard" replace />
+  return <>{children}</>
+}
+
 export default function App() {
   const location = useLocation()
   const theme = useAppStore((s) => s.theme)
@@ -46,12 +61,13 @@ export default function App() {
 
   return (
     <AnimatePresence mode="wait">
+      <Toaster richColors position="top-right" />
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="find-stores" element={<FindStoresPage />} />
           <Route path="wizard" element={<WizardPage />} />
@@ -66,7 +82,7 @@ export default function App() {
           <Route path="plans" element={<PlansPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="settings" element={<SettingsPage />} />
-          <Route path="admin" element={<AdminPage />} />
+          <Route path="admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
         </Route>
       </Routes>
     </AnimatePresence>

@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import {
   Settings, Sun, Moon, Monitor, Globe, Bell, BellOff,
   FileDown, Monitor as MonitorIcon, FileText, Key,
@@ -41,14 +42,16 @@ const integrations: Integration[] = [
 
 export default function SettingsPage() {
   const { user, logout, token } = useAuthStore();
-  const { theme, setTheme } = useAppStore();
+  const {
+    theme, setTheme,
+    notifications, setNotifications,
+    emailNotifications, setEmailNotifications,
+    defaultFormat, setDefaultFormat,
+    defaultPlatform, setDefaultPlatform,
+    defaultTemplate, setDefaultTemplate,
+  } = useAppStore();
   const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState(true);
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [defaultFormat, setDefaultFormat] = useState('md');
-  const [defaultPlatform, setDefaultPlatform] = useState('lovable');
-  const [defaultTemplate, setDefaultTemplate] = useState('completo');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -78,7 +81,13 @@ export default function SettingsPage() {
             return (
               <button
                 key={opt.value}
-                onClick={() => setTheme(opt.value)}
+                onClick={() => {
+                  if (opt.value === 'light') {
+                    toast.info('Modo claro será disponibilizado em breve');
+                    return;
+                  }
+                  setTheme(opt.value);
+                }}
                 className={cn(
                   'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm transition-all',
                   isActive ? 'bg-purple-500/15 text-purple-400 border border-purple-500/20' : 'glass-card text-zinc-400 hover:text-white'

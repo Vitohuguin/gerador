@@ -290,10 +290,12 @@ export default function Login() {
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 type="button"
-                className="btn-glass w-full flex items-center justify-center gap-2"
+                disabled
+                className="btn-glass w-full flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+                title="Em breve"
               >
                 <Globe className="w-4 h-4" />
-                Google
+                Google (Em breve)
               </motion.button>
             </motion.div>
 

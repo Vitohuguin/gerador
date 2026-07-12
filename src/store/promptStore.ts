@@ -30,7 +30,7 @@ const MOCK_PROMPTS: Prompt[] = [
     id: 'pr_002', projectId: 'proj_002', userId: 'usr_demo_001', title: 'Site - Barbearia Vintage',
     content: `# PROMPT PARA CRIAÇÃO DE SITE — BARBEARIA VINTAGE\n\n## VISÃO GERAL\nSite completo para barbearia com estilo vintage e moderno ao mesmo tempo.\n\n## OBJETIVO\nSite institucional com agendamento online integrado.\n\n## ESTILO VISUAL\nTons escuros com detalhes em laranja e dourado. Tipografia serifada para títulos.\n\n## ESTRUTURA\n...`,
     rawPrompt: 'Raw prompt data...', status: 'generated',
-    objective: 'site-institucional', niche: 'beauty', style: 'luxury', platform: 'bolt',
+    objective: 'site-institucional', niche: 'beauty', style: 'luxuoso', platform: 'bolt',
     language: 'pt', technologies: ['React', 'Node.js', 'Tailwind CSS', 'MySQL'], animations: ['scroll-reveal', 'micro-interactions'],
     structures: ['hero', 'features', 'contact', 'footer'], functionalities: ['auth', 'booking', 'notifications'],
     font: 'Manrope', colorScheme: 'Laranja Fire', favorites: false, version: 1,

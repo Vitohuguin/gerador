@@ -36,10 +36,11 @@ export default function Dashboard() {
   const { contracts } = useContractStore();
   const { proposals } = useProposalStore();
   const [usage, setUsage] = useState({ prompts: { used: 0, limit: 100 }, contracts: { used: 0, limit: 20 }, projects: { used: 0, limit: 5 } });
+  const [usageLoading, setUsageLoading] = useState(true);
 
   useEffect(() => {
-    usageAPI.getUsage().then(setUsage).catch(() => {});
-    const onFocus = () => usageAPI.getUsage().then(setUsage).catch(() => {});
+    usageAPI.getUsage().then((data) => { setUsage(data); setUsageLoading(false); }).catch(() => setUsageLoading(false));
+    const onFocus = () => usageAPI.getUsage().then((data) => { setUsage(data); setUsageLoading(false); }).catch(() => {});
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, []);
@@ -76,7 +77,7 @@ export default function Dashboard() {
         <p className="text-sm sm:text-base text-zinc-400 mt-1">{'Visao geral da sua plataforma de criacao de prompts'}</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -94,11 +95,20 @@ export default function Dashboard() {
         })}
         <div className="glass-card p-5">
           <p className="text-xs text-zinc-500 mb-1">Prompts usados</p>
-          <p className="text-lg font-bold text-white mb-2">{usage.prompts.used}/{usage.prompts.limit === Infinity ? '∞' : usage.prompts.limit}</p>
-          {usage.prompts.limit !== Infinity && (
-            <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
-              <div className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all" style={{ width: `${Math.min((usage.prompts.used / usage.prompts.limit) * 100, 100)}%` }} />
+          {usageLoading ? (
+            <div className="animate-pulse space-y-2">
+              <div className="h-5 bg-white/10 rounded w-16" />
+              <div className="h-1.5 bg-white/10 rounded-full w-full" />
             </div>
+          ) : (
+            <>
+              <p className="text-lg font-bold text-white mb-2">{usage.prompts.used}/{usage.prompts.limit === Infinity ? '∞' : usage.prompts.limit}</p>
+              {usage.prompts.limit !== Infinity && (
+                <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all" style={{ width: `${Math.min((usage.prompts.used / usage.prompts.limit) * 100, 100)}%` }} />
+                </div>
+              )}
+            </>
           )}
         </div>
       </motion.div>

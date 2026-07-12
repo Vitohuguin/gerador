@@ -2,36 +2,13 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/authStore';
+import { useBudgetStore, type Budget, type BudgetItem } from '@/store/budgetStore';
 import { UpgradeBlock } from '@/components/UpgradeBlock';
 import {
   Plus, X, DollarSign, FileDown, Trash2, Search,
-  Calendar, User, Percent, Receipt, Download, Crown,
+  Crown,
 } from 'lucide-react';
 import { cn, formatCurrency, formatDate, generateId } from '@/lib/utils';
-
-interface BudgetItem {
-  id: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-}
-
-interface Budget {
-  id: string;
-  clientName: string;
-  clientEmail: string;
-  items: BudgetItem[];
-  subtotal: number;
-  discount: number;
-  discountType: 'percent' | 'fixed';
-  tax: number;
-  taxType: 'percent' | 'fixed';
-  total: number;
-  notes: string;
-  validityDays: number;
-  createdAt: string;
-}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -46,7 +23,7 @@ export default function BudgetsPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const isPro = user?.plan === 'pro';
-  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const { budgets, addBudget, deleteBudget } = useBudgetStore();
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
@@ -76,7 +53,7 @@ export default function BudgetsPage() {
           </div>
         </div>
         {isPro ? (
-          <BudgetGenerator onSave={(budget) => setBudgets((prev) => [budget, ...prev])} />
+          <BudgetGenerator onSave={(budget) => addBudget(budget)} />
         ) : (
           <div className="flex flex-col items-center justify-center py-12">
             <Crown size={32} className="text-amber-400/50 mb-3" />
@@ -121,7 +98,7 @@ export default function BudgetsPage() {
                 a.click();
                 URL.revokeObjectURL(url);
               }} className="btn-glass p-2"><FileDown size={16} /></button>
-              <button onClick={() => setBudgets((prev) => prev.filter((b) => b.id !== budget.id))} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all"><Trash2 size={16} /></button>
+              <button onClick={() => { if (window.confirm('Tem certeza que deseja excluir este orcamento?')) deleteBudget(budget.id); }} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all"><Trash2 size={16} /></button>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -158,7 +135,7 @@ export default function BudgetsPage() {
               </div>
               <div className="flex justify-between text-zinc-500">
                 <span>Imposto ({budget.taxType === 'percent' ? `${budget.tax}%` : formatCurrency(budget.tax)})</span>
-                <span>+{budget.taxType === 'percent' ? formatCurrency(budget.subtotal * budget.tax / 100) : formatCurrency(budget.tax)}</span>
+                <span>+{budget.taxType === 'percent' ? formatCurrency(Math.max(0, budget.subtotal - (budget.discountType === 'percent' ? budget.subtotal * budget.discount / 100 : budget.discount)) * budget.tax / 100) : formatCurrency(budget.tax)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold text-white border-t border-white/5 pt-1">
                 <span>Total</span>
@@ -178,7 +155,7 @@ export default function BudgetsPage() {
   );
 }
 
-function BudgetGenerator({ onSave }: { onSave: (budget: Budget) => void }) {
+function BudgetGenerator({ onSave }: { onSave: (budget: Omit<Budget, 'id' | 'createdAt'>) => void }) {
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   const [items, setItems] = useState<BudgetItem[]>([
@@ -210,12 +187,12 @@ function BudgetGenerator({ onSave }: { onSave: (budget: Budget) => void }) {
 
   const subtotal = items.reduce((acc, item) => acc + item.total, 0);
   const discountValue = discountType === 'percent' ? subtotal * discount / 100 : discount;
-  const taxValue = taxType === 'percent' ? subtotal * tax / 100 : tax;
-  const total = subtotal - discountValue + taxValue;
+  const afterDiscount = Math.max(0, subtotal - discountValue);
+  const taxValue = taxType === 'percent' ? afterDiscount * tax / 100 : tax;
+  const total = afterDiscount + taxValue;
 
   const handleSave = () => {
     onSave({
-      id: generateId(),
       clientName,
       clientEmail,
       items: items.filter((i) => i.description),
@@ -227,7 +204,6 @@ function BudgetGenerator({ onSave }: { onSave: (budget: Budget) => void }) {
       total,
       notes,
       validityDays,
-      createdAt: new Date().toISOString(),
     });
     setClientName('');
     setClientEmail('');

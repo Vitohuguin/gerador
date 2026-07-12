@@ -10,7 +10,10 @@ export type Platform =
   | 'v0'
   | 'cursor'
   | 'claude-code'
-  | 'replit';
+  | 'replit'
+  | 'opencode'
+  | 'windsurf'
+  | 'copilot';
 
 export type NicheCategory =
   | 'ecommerce'
@@ -45,86 +48,122 @@ export type NicheCategory =
   | 'iot'
   | 'blockchain'
   | 'ai'
-  | 'servicos';
+  | 'servicos'
+  | 'celulares';
 
 export type PromptStyle =
   | 'minimalista'
-  | 'brutalista'
-  | 'glassmorphism'
-  | 'neumorphism'
+  | 'apple'
+  | 'premium'
+  | 'corporativo'
+  | 'elegante'
+  | 'luxuoso'
+  | 'futurista'
   | 'cyberpunk'
-  | 'retrowave'
-  | 'organic'
-  | 'luxury'
-  | 'corporate'
-  | 'playful'
+  | 'neon'
+  | 'glassmorphism'
+  | 'soft-ui'
   | 'editorial'
+  | 'gaming'
+  | 'ecommerce'
+  | 'saas'
+  | 'awwwards'
   | 'dark-mode'
-  | 'flat-design'
-  | 'gradient-rich';
+  | 'light-mode'
+  | 'auto-theme';
 
 export type AnimationType =
   | 'scroll-reveal'
-  | 'parallax'
+  | 'fade-in'
+  | 'slide-in'
+  | 'zoom-in'
+  | 'stagger-children'
   | 'hover-effects'
+  | 'micro-interactions'
+  | 'cursor-glow'
+  | 'magnetic-buttons'
+  | 'ripple-effect'
+  | 'tilt-3d'
+  | 'parallax'
+  | 'infinite-scroll'
+  | 'marquee'
+  | 'scroll-progress'
+  | 'smooth-scroll'
+  | 'sticky-sections'
   | 'page-transitions'
   | 'loading-skeletons'
-  | 'micro-interactions'
+  | 'loading-spinner'
   | 'typing-effect'
+  | 'count-up'
+  | 'text-reveal'
+  | 'gradient-text'
   | 'glitch-effect'
   | 'morphing'
-  | 'infinite-scroll'
-  | 'stagger-children'
-  | 'cursor-trail'
-  | 'count-up'
-  | 'marquee';
+  | 'glass-glow'
+  | 'animated-gradient'
+  | 'floating-elements'
+  | 'blob-animation'
+  | 'background-particles'
+  | 'mesh-gradient';
 
-export type TechnologyCategory = 'frontend' | 'backend' | 'database' | 'hosting';
+export type TechnologyCategory = 'auto' | 'frontend' | 'estilo' | 'ui' | 'animacoes' | 'backend' | 'database' | 'hosting';
 
 export type SiteStructure =
   | 'navbar-hero'
   | 'sobre'
+  | 'diferenciais'
   | 'servicos'
-  | 'projetos'
+  | 'produtos'
+  | 'como-funciona'
+  | 'galeria'
   | 'portfolio'
+  | 'projetos'
+  | 'videos'
   | 'equipe'
   | 'clientes'
-  | 'galeria'
   | 'depoimentos'
-  | 'faq'
+  | 'estatisticas'
+  | 'parceiros'
   | 'precos'
+  | 'promocoes'
+  | 'agendamento'
   | 'contato'
-  | 'footer'
   | 'cta-final'
+  | 'faq'
   | 'blog'
+  | 'localizacao'
   | 'area-cliente'
+  | 'login'
+  | 'dashboard'
+  | 'footer'
   | 'hero' | 'features' | 'pricing' | 'testimonials' | 'cta'
   | 'about' | 'team' | 'contact' | 'stats' | 'timeline'
   | 'integrations' | 'newsletter';
 
 export type Functionality =
   | 'auth'
-  | 'payment'
-  | 'search'
-  | 'notifications'
-  | 'chat'
-  | 'file-upload'
-  | 'upload'
-  | 'download'
-  | 'dark-mode'
-  | 'multilingual'
-  | 'analytics'
-  | 'social-share'
-  | 'comments'
-  | 'newsletter'
-  | 'booking'
+  | 'profile'
+  | 'password-recovery'
+  | 'social-login'
   | 'dashboard'
-  | 'api'
-  | 'export'
+  | 'analytics'
+  | 'notifications'
+  | 'search'
   | 'filters'
   | 'sorting'
-  | 'pagination'
-  | 'caching';
+  | 'upload'
+  | 'download'
+  | 'export'
+  | 'chat'
+  | 'comments'
+  | 'newsletter'
+  | 'social-share'
+  | 'dark-mode'
+  | 'multilingual'
+  | 'api'
+  | 'caching'
+  | 'payment'
+  | 'booking';
 
 export type Objective =
   | 'landing-page'
@@ -132,21 +171,28 @@ export type Objective =
   | 'ecommerce'
   | 'portfolio'
   | 'blog'
-  | 'dashboard'
-  | 'marketplace'
-  | 'assinatura'
-  | 'curso-online'
-  | 'rede-social'
-  | 'app-mobile'
-  | 'sistema-gestao'
-  | 'landing-eventos'
-  | 'one-page'
+  | 'documentacao'
+  | 'central-ajuda'
   | 'sistema-web'
-  | 'pagina-captura'
-  | 'area-membros'
+  | 'dashboard'
+  | 'sistema-admin'
+  | 'pwa'
   | 'crm'
   | 'erp'
-  | 'sistema-admin';
+  | 'agendamento'
+  | 'reservas'
+  | 'marketplace'
+  | 'area-membros'
+  | 'saas'
+  | 'lms'
+  | 'restaurante'
+  | 'hotel'
+  | 'clinica'
+  | 'pagina-captura'
+  | 'pagina-lancamento'
+  | 'pagina-vendas'
+  | 'pagina-evento'
+  | 'custom';
 
 export type ContractType =
   | 'site'
@@ -417,6 +463,7 @@ export interface StyleOption {
   icon: string;
   description: string;
   preview: string;
+  category: string;
   premium?: boolean;
 }
 
@@ -427,6 +474,7 @@ export interface PlatformOption {
   url: string;
   description: string;
   color: string;
+  focus: string;
 }
 
 export interface LanguageOption {
@@ -465,6 +513,7 @@ export interface StructureOption {
   label: string;
   icon: string;
   description: string;
+  category: string;
 }
 
 export interface FunctionalityOption {
@@ -480,6 +529,7 @@ export interface ObjectiveOption {
   label: string;
   icon: string;
   description: string;
+  category: string;
 }
 
 export interface ContractTypeOption {

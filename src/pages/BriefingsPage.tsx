@@ -6,31 +6,11 @@ import {
   Globe, Palette, Upload, Download,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { useBriefingStore } from '@/store/briefingStore';
+import type { Briefing } from '@/store/briefingStore';
 import { NICHES, OBJECTIVES } from '@/lib/constants';
-import { cn, formatDate, generateId } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 import { UpgradeBlock } from '@/components/UpgradeBlock';
-import type { NicheCategory, Objective } from '@/types';
-
-interface Briefing {
-  id: string;
-  clientName: string;
-  companyName: string;
-  industry: string;
-  objectives: string[];
-  projectDescription: string;
-  targetAudience: string;
-  competitors: string;
-  references: string;
-  colorPreferences: string;
-  fontPreferences: string;
-  tone: string;
-  mandatoryElements: string;
-  avoidedElements: string;
-  deadline: string;
-  budget: number;
-  additionalNotes: string;
-  createdAt: string;
-}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -149,7 +129,7 @@ function BriefingForm({ briefing, onClose, onSave }: { briefing?: Briefing | nul
 
 export default function BriefingsPage() {
   const { user } = useAuthStore();
-  const [briefings, setBriefings] = useState<Briefing[]>([]);
+  const { briefings, addBriefing, updateBriefing, deleteBriefing } = useBriefingStore();
   const [showForm, setShowForm] = useState(false);
   const [editBriefing, setEditBriefing] = useState<Briefing | null>(null);
   const [viewBriefing, setViewBriefing] = useState<Briefing | null>(null);
@@ -163,11 +143,9 @@ export default function BriefingsPage() {
 
   const handleSave = (data: any) => {
     if (editBriefing) {
-      setBriefings((prev) => prev.map((b) => b.id === editBriefing.id ? { ...b, ...data } : b));
+      updateBriefing(editBriefing.id, data);
     } else {
-      setBriefings((prev) => [{
-        id: generateId(), ...data, createdAt: new Date().toISOString(),
-      }, ...prev]);
+      addBriefing(data);
     }
     setEditBriefing(null);
   };
@@ -247,7 +225,7 @@ export default function BriefingsPage() {
                 <button onClick={() => exportBriefing(briefing)} className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-all" title="Exportar">
                   <FileDown size={16} />
                 </button>
-                <button onClick={() => setBriefings((prev) => prev.filter((b) => b.id !== briefing.id))} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir">
+                <button onClick={() => { if (window.confirm('Tem certeza que deseja excluir este briefing?')) deleteBriefing(briefing.id); }} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir">
                   <Trash2 size={16} />
                 </button>
               </div>
@@ -270,7 +248,7 @@ export default function BriefingsPage() {
                   <div><span className="text-zinc-500">Empresa:</span> <span className="text-white ml-1">{viewBriefing.companyName || '-'}</span></div>
                   <div><span className="text-zinc-500">Nicho:</span> <span className="text-white ml-1">{viewBriefing.industry || '-'}</span></div>
                 </div>
-                <div><span className="text-zinc-500">Objetivos:</span> <div className="flex flex-wrap gap-1 mt-1">{viewBriefing.objectives.map((o) => <span key={o} className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">{o}</span>)}</div></div>
+                <div><span className="text-zinc-500">Objetivos:</span> <div className="flex flex-wrap gap-1 mt-1">{viewBriefing.objectives.map((o) => <span key={o} className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">{OBJECTIVES.find(obj => obj.id === o)?.label || o}</span>)}</div></div>
                 <div><span className="text-zinc-500">Descrição:</span><p className="text-white mt-1">{viewBriefing.projectDescription || '-'}</p></div>
                 <div><span className="text-zinc-500">Público-Alvo:</span><p className="text-white mt-1">{viewBriefing.targetAudience || '-'}</p></div>
                 <div className="grid grid-cols-2 gap-4">

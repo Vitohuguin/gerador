@@ -632,18 +632,46 @@ app.put('/api/admin/users/:id/plan', authMiddleware, requireAdmin, async (req, r
 
 function generateMockPrompt(data) {
   const lang = data.language === 'en' ? 'English' : 'Português';
+  const companyName = data.companyName || 'Empresa';
+  const segment = data.segment || data.niche || 'Tecnologia';
+  const city = data.city || '';
+  const state = data.state || '';
+  const country = data.country || 'Brasil';
+  const location = [city, state, country].filter(Boolean).join(', ');
+  const whatsapp = data.whatsapp || '';
+  const phone = data.phone || '';
+  const email = data.email || '';
+  const instagram = data.instagram || '';
+  const facebook = data.facebook || '';
+  const googleMaps = data.googleMaps || '';
+  const currentSite = data.currentSite || '';
+
   return `# PROMPT PROFISSIONAL — ${data.objective || 'Landing Page'}
 
 ## IDIOMA: ${lang}
 
 ## VISÃO GERAL
-Projeto profissional de ${data.objective || 'Landing Page'} para o nicho de ${data.niche || 'Tecnologia'}, seguindo boas práticas de UX/UI, SEO e performance.
+Projeto profissional de ${data.objective || 'Landing Page'} para a empresa **${companyName}**, segmento de ${segment}, seguindo boas práticas de UX/UI, SEO e performance.
 
 ## IDENTIDADE VISUAL
 - **Estilo**: ${data.style || 'Moderno'}
 - **Paleta**: ${data.primaryColor && data.secondaryColor ? `${data.primaryColor} / ${data.secondaryColor}` : (data.colorScheme || 'Roxo Tech')}
 - **Tipografia**: ${data.font || 'Inter'}
 - **Tema**: Dark/Light com glassmorphism
+
+## DADOS DA EMPRESA
+- **Nome**: ${companyName}
+- **Slogan**: ${data.slogan || 'Não informado'}
+- **Segmento**: ${segment}
+- **Descrição**: ${data.businessDescription || 'Não informado'}
+- **Localização**: ${location}
+${whatsapp ? `- **WhatsApp**: ${whatsapp}` : ''}
+${phone ? `- **Telefone**: ${phone}` : ''}
+${email ? `- **E-mail**: ${email}` : ''}
+${instagram ? `- **Instagram**: ${instagram}` : ''}
+${facebook ? `- **Facebook**: ${facebook}` : ''}
+${googleMaps ? `- **Google Maps**: ${googleMaps}` : ''}
+${currentSite ? `- **Site Atual**: ${currentSite}` : ''}
 
 ## PÚBLICO-ALVO
 ${data.targetAudience || 'Profissionais que buscam presença digital de alto nível.'}
@@ -670,7 +698,7 @@ ${(data.technologies || ['React', 'Next.js', 'Tailwind CSS']).join(', ')}
 - Animações suaves (prefers-reduced-motion)
 
 ## DESCRIÇÃO
-${data.description || `Projeto de ${data.objective || 'Landing Page'} para ${data.niche || 'Tecnologia'}.`}
+${data.description || `Projeto de ${data.objective || 'Landing Page'} para ${companyName}.`}
 
 ${data.additionalContext ? `## CONTEXTO ADICIONAL\n${data.additionalContext}` : ''}
 
@@ -753,7 +781,7 @@ PromptForge AI
 `;
 }
 
-async function callNvidia(messages, model = NVIDIA_MODEL) {
+async function callNvidia(messages, model = NVIDIA_MODEL, options = {}) {
   const urls = [`https://integrate.api.nvidia.com/v1/chat/completions`];
 
   for (const url of urls) {
@@ -767,12 +795,12 @@ async function callNvidia(messages, model = NVIDIA_MODEL) {
         body: JSON.stringify({
           model,
           messages,
-          temperature: 1.00,
-          top_p: 0.95,
-          max_tokens: 4096,
+          temperature: options.temperature ?? 0.7,
+          top_p: options.top_p ?? 0.9,
+          max_tokens: options.max_tokens ?? 8192,
           stream: false,
         }),
-        signal: AbortSignal.timeout(45000),
+        signal: AbortSignal.timeout(60000),
       });
 
       if (response.ok) {
@@ -836,27 +864,142 @@ app.get('/api/usage', authMiddleware, rateLimit({ windowMs: 60000, max: 30, mess
 
 app.post('/api/generate-prompt', authMiddleware, rateLimit({ windowMs: 60000, max: 20, message: 'Muitas gerações de prompt. Aguarde um momento.' }), requirePlan, checkLimit, async (req, res) => {
   const data = req.body;
-  const userPrompt = `Você é especialista em criar prompts profissionais para sites com IA.
 
-Crie um prompt completo para um projeto com estas características:
-Nicho: ${data.niche || 'Não especificado'}
-Objetivo: ${data.objective || 'Landing Page'}
-Estilo: ${data.style || 'Moderno'}
-Cores: ${data.primaryColor && data.secondaryColor ? `${data.primaryColor} (primária) / ${data.secondaryColor} (secundária)` : (data.colorScheme || 'Personalizada')}
-Tipografia: ${data.font || 'Inter'}
-Plataforma: ${data.platform || 'Lovable'}
-Tecnologias: ${(data.technologies||[]).join(', ') || 'React, Tailwind CSS'}
-Animações: ${(data.animations||[]).join(', ') || 'Scroll Reveal'}
-Estrutura: ${(data.structures||[]).join(', ') || 'Hero, FAQ, Contato'}
-Funcionalidades: ${(data.functionalities||[]).join(', ') || 'Responsivo, SEO'}
-Público-alvo: ${data.targetAudience || 'Geral'}
-Descrição: ${data.description || 'Projeto profissional'}
-${data.additionalContext ? `Contexto extra: ${data.additionalContext}` : ''}
+  const systemPrompt = `Você é um engenheiro de prompts world-class, especialista em criar prompts ULTRA-DETALHADOS e profissionais para ferramentas de geração de sites com IA (Lovable, Bolt.new, v0, Cursor, Claude Code, Replit).
 
-Gere um prompt COMPLETO, DETALHADO e organizado.`;
+SUAS RESPONSABILIDADES:
+1. Gerar prompts que, quando copiados e colados em qualquer ferramenta de IA, resultem em um site profissional, completo e funcional.
+2. Cada prompt deve conter TUDO que a IA precisa para construir o site do zero — sem ambiguidades, sem deixar nada para interpretação.
+3. O prompt deve ser escrito em Markdown bem estruturado, com seções claras e detalhadas.
+
+ESTRUTURA OBRIGÓRIA DO PROMPT (todas as seções devem estar presentes):
+
+## 1. CONTEXTO DO PROJETO
+- Descrição completa do projeto, incluindo nicho, objetivo e proposta de valor
+- Quem é o público-alvo e quais são suas dores/necessidades
+- Tom de voz e personalidade da marca
+
+## 2. IDENTIDADE VISUAL
+- Paleta de cores exata (primária, secundária, acento, fundo, texto) com códigos hex se possível
+- Tipografia (fonte principal, secundária, tamanhos para H1, H2, H3, body, small)
+- Estilo visual detalhado (não apenas "moderno", mas DESCREVER o que "moderno" significa neste contexto)
+- Espaçamentos, bordas, sombras, gradientes
+- Referências visuais (estilo de cards, botões, inputs)
+
+## 3. LAYOUT E ESTRUTURA
+Para CADA seção do site, especificar:
+- Nome da seção
+- Elementos visuais presentes (título, subtítulo, imagem, botão, ícone, etc.)
+- Layout interno (grid, flex, colunas, alinhamento)
+- Comportamento em mobile, tablet e desktop
+- Conteúdo específico (textos, CTAs, dados)
+
+## 4. COMPONENTES UI
+Para cada tipo de componente:
+- Header/Navbar: itens do menu, comportamento ao scroll, logo position, mobile hamburger
+- Hero: headline, subheadline, CTA principal, CTA secundário, imagem/vídeo de fundo, partículas/elementos decorativos
+- Cards: estilo, bordas, hover effects, sombras, conteúdo interno
+- Botões: variantes (primary, secondary, ghost), tamanhos, hover states, ícones
+- Footer: colunas, links, redes sociais, newsletter, copyright
+- Formulários: campos, validação, estados (vazio, erro, sucesso), responsividade
+- Seções de prova social: depoimentos, logos de clientes, estatísticas, badges
+
+## 5. ANIMAÇÕES E INTERAÇÕES
+Para cada animação, especificar:
+- Tipo: scroll reveal, hover, click, page load, parallax
+- Propriedades: opacidade, translateX/Y, scale, rotate
+- Duração e easing
+- Trigger (quando ativa)
+- Respect prefers-reduced-motion
+
+## 6. CONTEÚDO REAL
+- Textos placeholder que façam sentido para o nicho (não "Lorem ipsum")
+- CTAs persuasivos e específicos
+- Dados de exemplo realistas (preços, nomes, estatísticas)
+- Copywriting que converte
+
+## 7. FUNCIONALIDADES TÉCNICAS
+- Responsividade completa (mobile-first)
+- Performance (Lazy loading, image optimization)
+- SEO (meta tags, Open Graph, schema markup)
+- Acessibilidade (WCAG 2.1 AA, aria-labels, contraste)
+- Animações suaves e performáticas
+- Dark/Light mode se aplicável
+
+## 8. STACK TECNOLÓGICA
+- Se as tecnologias foram especificadas, use EXATAMENTE essas
+- Se a tecnologia for "auto" ou estiver vazia, ESCOLHA a melhor stack baseada no: nicho, objetivo, plataforma-alvo, complexidade e performance
+- Justifique brevemente sua escolha de stack
+- Framework específico a ser usado
+- Bibliotecas de componentes
+- Bibliotecas de animação
+- Ferramentas de build
+- Estrutura de pastas recomendada
+
+## 9. FOCO POR PLATAFORMA
+Adapte o prompt de acordo com a plataforma escolhida:
+
+- **Lovable**: Design premium, UI/UX moderna, animações fluidas, experiência visual de alto nível e interfaces inspiradas em Awwwards.
+- **Bolt.new**: Desenvolvimento full-stack completo com frontend, backend, banco de dados, autenticação e deploy integrados.
+- **v0**: Geração de componentes React/Next.js utilizando Shadcn/UI, Tailwind CSS, acessibilidade e interfaces reutilizáveis.
+- **Cursor**: Código completo, arquitetura escalável, componentização, boas práticas, refatoração inteligente e desenvolvimento pronto para produção.
+- **Claude Code**: Explicações detalhadas, código organizado, componentes reutilizáveis, arquitetura limpa. Documente bem o código.
+- **Replit**: Prototipagem rápida, projeto simples, dependências claras, execução online. Inclua package.json completo.
+- **OpenCode**: Desenvolvimento de aplicações premium com design de nível Lovable, UI/UX moderna, animações elegantes, arquitetura limpa, código modular, TypeScript, performance, SEO, responsividade, acessibilidade e organização profissional, gerando projetos completos prontos para produção.
+- **Windsurf**: Fluxo de trabalho contínuo, refatoração, sugestões de código, produtividade. Inclua configs de IDE.
+- **GitHub Copilot**: Autocomplete inteligente, snippets, testes, documentação inline. Use comentários descritivos.
+
+REGRAS:
+- NUNCA use "Lorem ipsum" — sempre escreva conteúdo real e persuasivo
+- NUNCA seja vago — cada detalhe deve ser EXPLÍCITO
+- SEMPRE especifique comportamentos mobile
+- SEMPRE inclua estados interativos (hover, focus, active, disabled)
+- O prompt deve ter no mínimo 1500 palavras
+- Seja tão específico que um desenvolvedor júnior consiga implementar apenas lendo o prompt
+- Termina o prompt com uma nota indicando a plataforma-alvo`;
+
+  const userPrompt = `Gere um prompt profissional completo para o seguinte projeto:
+
+**Nicho:** ${data.niche || 'Não especificado'}
+**Objetivo:** ${data.objective || 'Landing Page'}
+**Estilo Visual:** ${data.style || 'Moderno'}
+**Cores:** ${data.primaryColor && data.secondaryColor ? `${data.primaryColor} (primária) / ${data.secondaryColor} (secundária)` : (data.colorScheme || 'Personalizada')}
+**Tipografia:** ${data.font || 'Inter'}
+**Plataforma Alvo:** ${data.platform || 'Lovable'}
+**Tecnologias:** ${(data.technologies || []).join(', ') || 'React, Tailwind CSS'}
+**Animações Desejadas:** ${(data.animations || []).join(', ') || 'Scroll Reveal, Hover Effects'}
+**Estrutura do Site:** ${(data.structures || []).join(', ') || 'Hero, Sobre, Funcionalidades, FAQ, Contato'}
+**Funcionalidades:** ${(data.functionalities || []).join(', ') || 'Responsivo, SEO, Performance'}
+**Público-Alvo:** ${data.targetAudience || 'Geral'}
+**Descrição do Projeto:** ${data.description || 'Projeto profissional de site'}
+${data.additionalContext ? `**Contexto Adicional:** ${data.additionalContext}` : ''}
+
+**DADOS DA EMPRESA:**
+- Nome: ${data.companyName || 'Não informado'}
+- Slogan: ${data.slogan || 'Não informado'}
+- Segmento: ${data.segment || 'Não informado'}
+- Descrição do Negócio: ${data.businessDescription || 'Não informado'}
+- País: ${data.country || 'Brasil'}
+- Estado: ${data.state || 'Não informado'}
+- Cidade: ${data.city || 'Não informado'}
+- Bairro: ${data.neighborhood || 'Não informado'}
+- Endereço: ${data.address || 'Não informado'}
+- WhatsApp: ${data.whatsapp || 'Não informado'}
+- Telefone: ${data.phone || 'Não informado'}
+- E-mail: ${data.email || 'Não informado'}
+- Site Atual: ${data.currentSite || 'Não informado'}
+- Google Maps: ${data.googleMaps || 'Não informado'}
+- Instagram: ${data.instagram || 'Não informado'}
+- Facebook: ${data.facebook || 'Não informado'}
+${data.customObjective ? `**Objetivo Customizado:** ${data.customObjective}` : ''}
+
+IMPORTANTE: Use os dados da empresa para personalizar o conteúdo do site (textos, CTAs, contatos, localização). O prompt gerado deve ser EXTREMAMENTE detalhado, com textos reais (não placeholder), especificações técnicas precisas, e instruções suficientemente claras para que a ferramenta de IA escolhida consiga gerar o site completo sem precisar de mais informações. Adapte o estilo e estrutura do prompt para a plataforma-alvo.`;
 
   const result = await callWithFallback(
-    [{ role: 'user', content: userPrompt }],
+    [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
     () => generateMockPrompt(data)
   );
 
@@ -875,7 +1018,40 @@ Gere um prompt COMPLETO, DETALHADO e organizado.`;
 app.post('/api/generate-contract', authMiddleware, rateLimit({ windowMs: 60000, max: 15, message: 'Muitas gerações de contrato. Aguarde um momento.' }), requirePlan, checkLimit, async (req, res) => {
   const data = req.body;
   const result = await callWithFallback(
-    [{ role: 'user', content: `Crie um contrato de prestação de serviços com:\nTipo: ${data.type || 'Desenvolvimento'}\nContratante: ${data.clientName || 'Cliente'} (${data.clientDocument || ''})\nContratado: ${data.companyName || 'Empresa'} (${data.companyDocument || ''})\nValor: R$ ${data.totalValue || 0}\nPagamento: ${data.paymentMethod || 'PIX'}\nPrazo: ${data.dueDate || 'A definir'}\nDescrição: ${data.projectDescription || 'Serviços'}\nCláusulas: ${(data.clauses||[]).join(', ')}` }],
+    [
+      {
+        role: 'system',
+        content: `Você é um advogado especialista em contratos de prestação de serviços de tecnologia e desenvolvimento web. Gere contratos profissionais, completos e legalmente robustos para o Brasil.
+
+ESTRUTURA OBRIGATÓRIA DO CONTRATO:
+1. Cabeçalho com identificação das partes (contratante e contratado)
+2. Objeto do contrato (descrição detalhada dos serviços)
+3. Valor e condições de pagamento (detalhamento de parcelas, reajustes)
+4. Prazo de execução (cronograma, marcos, entregas parciais)
+5. Obrigações do contratado
+6. Obrigações do contratante
+7. Propriedade intelectual e direitos autorais
+8. Confidencialidade e sigilo
+9. Garantias e suporte pós-entrega
+10. Revisões e rodadas de alterações
+11. Rescisão contratual (multas, notificações)
+12. Foro e legislação aplicável
+13. Disposições gerais
+14. Assinaturas
+
+REGRAS:
+- Use linguagem formal jurídica mas acessível
+- Inclua cláusulas que protejam ambas as partes
+- Seja específico sobre prazos, valores e entregáveis
+- Inclua cláusula de reajuste baseada no IPCA
+- Adicione cláusula de propriedade intelectual clara
+- Formate com numeração romana para cláusulas`
+      },
+      {
+        role: 'user',
+        content: `Crie um contrato de prestação de serviços com:\nTipo: ${data.type || 'Desenvolvimento'}\nContratante: ${data.clientName || 'Cliente'} (${data.clientDocument || ''})\nContratado: ${data.companyName || 'Empresa'} (${data.companyDocument || ''})\nValor: R$ ${data.totalValue || 0}\nPagamento: ${data.paymentMethod || 'PIX'}\nPrazo: ${data.dueDate || 'A definir'}\nDescrição: ${data.projectDescription || 'Serviços'}\nCláusulas: ${(data.clauses || []).join(', ')}`
+      },
+    ],
     () => generateMockContract(data)
   );
 
@@ -894,7 +1070,35 @@ app.post('/api/generate-contract', authMiddleware, rateLimit({ windowMs: 60000, 
 app.post('/api/generate-proposal', authMiddleware, rateLimit({ windowMs: 60000, max: 10, message: 'Muitas gerações de proposta. Aguarde um momento.' }), requirePro, async (req, res) => {
   const data = req.body;
   const result = await callWithFallback(
-    [{ role: 'user', content: `Crie uma proposta comercial profissional para:\nCliente: ${data.clientName || 'Cliente'}\nDescrição: ${data.projectDescription || 'Projeto'}\nValor: R$ ${data.totalValue || 0}\nPrazo: ${data.timeline || '30 dias'}\nTecnologias: ${(data.technologies||[]).join(', ')}` }],
+    [
+      {
+        role: 'system',
+        content: `Você é um especialista em vendas e propostas comerciais para agências e freelancers de tecnologia. Gere propostas comerciais profissionais, persuasivas e detalhadas.
+
+ESTRUTURA OBRIGATÓRIA DA PROPOSTA:
+1. Capa — Título impactante, dados do cliente e prestador
+2. Sumário Executivo — Visão geral do projeto em 3-4 parágrafos
+3. Entendimento do Projeto — Demonstre que entendeu a necessidade do cliente
+4. Escopo Detalhado — Liste cada entrega com descrição, quantidade e valor
+5. Cronograma — Timeline com fases e entregas
+6. Investimento — Tabela de valores com detalhamento por fase
+7. Condições Comerciais — Forma de pagamento, prazos, garantias
+8. Por que nos escolher — Diferenciais e cases de sucesso
+9. Próximos Passos — Call to action claro
+10. Validez da proposta
+
+REGRAS:
+- Tom profissional mas caloroso
+- Use dados reais e específicos (não genéricos)
+- Inclua métricas e números quando possível
+- Seja persuasivo mas honesto
+- Formate com Markdown limpo e profissional`
+      },
+      {
+        role: 'user',
+        content: `Crie uma proposta comercial profissional para:\nCliente: ${data.clientName || 'Cliente'}\nDescrição: ${data.projectDescription || 'Projeto'}\nValor: R$ ${data.totalValue || 0}\nPrazo: ${data.timeline || '30 dias'}\nTecnologias: ${(data.technologies || []).join(', ')}`
+      },
+    ],
     () => generateMockProposal(data)
   );
 
@@ -911,7 +1115,32 @@ app.post('/api/generate-proposal', authMiddleware, rateLimit({ windowMs: 60000, 
 app.post('/api/improve-prompt', authMiddleware, rateLimit({ windowMs: 60000, max: 10, message: 'Muitas requisições de melhoria. Aguarde.' }), requirePro, async (req, res) => {
   const { content } = req.body;
   const result = await callWithFallback(
-    [{ role: 'user', content: `Melhore este prompt, adicione mais detalhes de UX, UI, SEO, performance e torne-o mais profissional:\n\n${content}` }],
+    [
+      {
+        role: 'system',
+        content: `Você é um especialista em UX, UI, SEO e engenharia de prompts. Sua tarefa é MELHORAR um prompt existente para geração de sites com IA.
+
+MELHORIAS OBRIGATÓRIAS:
+1. UX/UI — Adicione: hierarquia visual, fluxo do usuário, microinterações, estados de componentes (hover, focus, active, disabled), spacing system consistente, grid responsivo
+2. SEO — Adicione: meta title/description otimizados, Open Graph tags, schema markup JSON-LD, heading hierarchy semântica, alt texts para imagens
+3. Performance — Adicione: lazy loading, image optimization (WebP/AVIF), critical CSS, font loading strategy, CLS prevention
+4. Acessibilidade — Adicione: ARIA labels, contraste WCAG 2.1 AA, keyboard navigation, screen reader support, focus management
+5. Copywriting — Melhore os textos para serem mais persuasivos, com CTAs claros e benefícios específicos
+6. Estrutura — Adicione qualquer seção que esteja faltando e que seja importante para o nicho
+7. Detalhamento — Transforme qualquer instrução vaga em instruções EXPLÍCITAS e acionáveis
+
+REGRAS:
+- Mantenha a essência e o objetivo original do prompt
+- NUNCA remova funcionalidades existentes — apenas adicione
+- Adicione no mínimo 30% mais conteúdo ao prompt
+- Preserve o formato Markdown
+- O resultado final deve ser MELHOR que o original em todas as dimensões`
+      },
+      {
+        role: 'user',
+        content: `Melhore este prompt adicionando detalhes de UX, UI, SEO, performance, acessibilidade e copywriting:\n\n${content}`
+      },
+    ],
     () => content + '\n\n✅ Prompt melhorado com diretrizes adicionais de UX/UI e SEO.'
   );
   res.json({ content: result.content });
@@ -920,7 +1149,30 @@ app.post('/api/improve-prompt', authMiddleware, rateLimit({ windowMs: 60000, max
 app.post('/api/correct-prompt', authMiddleware, rateLimit({ windowMs: 60000, max: 10, message: 'Muitas requisições de correção. Aguarde.' }), requirePro, async (req, res) => {
   const { content } = req.body;
   const result = await callWithFallback(
-    [{ role: 'user', content: `Corrija erros de português, estrutura e consistência neste prompt:\n\n${content}` }],
+    [
+      {
+        role: 'system',
+        content: `Você é um revisor profissional especializado em prompts para IA. Sua tarefa é CORRIGIR e PADRONIZAR um prompt existente.
+
+CORREÇÕES OBRIGATÓRIAS:
+1. Português — Corrija erros gramaticais, ortográficos, de pontuação e concordância
+2. Consistência — Padronize termos (ex: use sempre "seção" ou sempre "bloco", não misture)
+3. Estrutura — Reorganize as seções em ordem lógica e hierárquica
+4. Clareza — Reescreva frases ambíguas ou confusas de forma clara e objetiva
+5. Formatação — Padronize listas, negritos, títulos e espaçamento em Markdown
+6. Completude — Identifique seções incompletas e sinalize (ou complete se possível)
+7. Redundância — Remova repetições desnecessárias mantendo a informação
+
+FORMATO DE SAÍDA:
+- Corrija o prompt inteiro
+- Adicione no final uma seção "## Correções Realizadas" listando o que foi alterado
+- Preserve todo o conteúdo original — apenas corrija e melhore`
+      },
+      {
+        role: 'user',
+        content: `Corrija erros de português, estrutura e consistência neste prompt:\n\n${content}`
+      },
+    ],
     () => content + '\n\n✅ Prompt corrigido e padronizado.'
   );
   res.json({ content: result.content });
@@ -929,7 +1181,35 @@ app.post('/api/correct-prompt', authMiddleware, rateLimit({ windowMs: 60000, max
 app.post('/api/optimize-prompt', authMiddleware, rateLimit({ windowMs: 60000, max: 10, message: 'Muitas requisições de otimização. Aguarde.' }), requirePro, async (req, res) => {
   const { content } = req.body;
   const result = await callWithFallback(
-    [{ role: 'user', content: `Otimize este prompt reduzindo tokens desnecessários e mantendo a qualidade:\n\n${content}` }],
+    [
+      {
+        role: 'system',
+        content: `Você é um especialista em otimização de prompts para IA. Sua tarefa é OTIMIZAR um prompt existente, reduzindo tokens desnecessários sem perder qualidade.
+
+ESTRATÉGIAS DE OTIMIZAÇÃO:
+1. Concisão — Remova palavras de enchimento ("realmente", "bastante", "muito") sem perder significado
+2. Compactação — Transforme parágrafos longos em listas objetivas quando apropriado
+3. Eliminação — Remova redundâncias e informações duplicadas
+4. Essência — Mantenha TODA a informação técnica relevante, mesmo removendo texto
+5. Priorização — Coloque as informações mais importantes primeiro
+6. Formatação — Use Markdown eficientemente (listas > parágrafos para instruções)
+
+REGRAS CRÍTICAS:
+- NÃO remova nenhuma funcionalidade ou especificação técnica
+- NÃO simplifique demais — a IA que receber o prompt precisa de detalhes
+- Reduza em 20-40% o tamanho total
+- Mantenha a pontuação de qualidade do prompt
+- Preserve a estrutura de seções Markdown
+
+FORMATO DE SAÍDA:
+- Retorne o prompt otimizado
+- Adicione no final uma métrica: "## Otimização: X% menor (Y tokens → Z tokens)"`
+      },
+      {
+        role: 'user',
+        content: `Otimize este prompt reduzindo tokens desnecessários e mantendo a qualidade:\n\n${content}`
+      },
+    ],
     () => content + '\n\n✅ Prompt otimizado (estrutura mais enxuta).'
   );
   res.json({ content: result.content });
@@ -938,7 +1218,32 @@ app.post('/api/optimize-prompt', authMiddleware, rateLimit({ windowMs: 60000, ma
 app.post('/api/generate-alternative', authMiddleware, rateLimit({ windowMs: 60000, max: 10, message: 'Muitas requisições de alternativa. Aguarde.' }), requirePro, async (req, res) => {
   const { content } = req.body;
   const result = await callWithFallback(
-    [{ role: 'user', content: `Crie uma versão ALTERNATIVA com abordagem visual e estrutural completamente diferente para:\n\n${content}` }],
+    [
+      {
+        role: 'system',
+        content: `Você é um criativo especialista em design de interfaces web. Sua tarefa é criar uma versão ALTERNATIVA de um prompt existente, com abordagem visual e estrutural COMPLETAMENTE DIFERENTE.
+
+MUDANÇAS OBRIGATÓRIAS (todas devem ser aplicadas):
+1. Layout — Mude completamente o layout (ex: se era single-column, mude para split-screen; se era grid, mude para scroll horizontal)
+2. Paleta de Cores — Sugira uma paleta alternativa que transmita a mesma vibe mas visualmente distinta
+3. Tipografia — Sugira combinação de fontes diferente
+4. Estrutura — Reorganize a ordem das seções ou adicione/remova seções para criar uma experiência diferente
+5. Estilo Visual — Mude o estilo (ex: se era minimalista, mude para bold/ousado; se era dark, mude para light clean)
+6. Animações — Sugira tipos de animação diferentes
+7. Hero — Redesenhe completamente a seção hero com conceito diferente
+
+REGRAS:
+- Mantenha TODAS as funcionalidades e conteúdo do prompt original
+- A versão alternativa deve ser VISUALMENTE DISTINTA — alguém deveria notar a diferença imediatamente
+- Preserve a qualidade e completude do prompt
+- Não apenas mude cores — mude o CONCEITO visual
+- Adicione um título "## Versão Alternativa — [Nome do Conceito]" no início`
+      },
+      {
+        role: 'user',
+        content: `Crie uma versão ALTERNATIVA com abordagem visual e estrutural completamente diferente para:\n\n${content}`
+      },
+    ],
     () => content + '\n\n## VERSÃO ALTERNATIVA\nAbordagem visual e estrutural diferente.'
   );
   res.json({ content: result.content });

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import {
   Search, Filter, X, Eye, Edit3, Copy, Trash2, RotateCcw,
@@ -95,25 +96,30 @@ export default function HistoryPage() {
   const regeneratePrompt = async (id: string) => {
     const prompt = prompts.find((p) => p.id === id);
     if (!prompt) return;
-    const { nvidiaAPI } = await import('@/services/api');
-    const res = await nvidiaAPI.generatePrompt({
-      objective: prompt.objective,
-      niche: prompt.niche,
-      style: prompt.style,
-      platform: prompt.platform,
-      language: prompt.language,
-      technologies: prompt.technologies,
-      animations: prompt.animations,
-      structures: prompt.structures,
-      functionalities: prompt.functionalities,
-      font: prompt.font,
-      colorScheme: prompt.colorScheme,
-      targetAudience: '',
-      referenceUrl: '',
-      description: '',
-      additionalContext: '',
-    }, prompt.language);
-    updatePrompt(id, { content: res.content, tokens: res.tokens });
+    try {
+      const { nvidiaAPI } = await import('@/services/api');
+      const res = await nvidiaAPI.generatePrompt({
+        objective: prompt.objective,
+        niche: prompt.niche,
+        style: prompt.style,
+        platform: prompt.platform,
+        language: prompt.language,
+        technologies: prompt.technologies,
+        animations: prompt.animations,
+        structures: prompt.structures,
+        functionalities: prompt.functionalities,
+        font: prompt.font,
+        colorScheme: prompt.colorScheme,
+        targetAudience: '',
+        referenceUrl: '',
+        description: '',
+        additionalContext: '',
+      }, prompt.language);
+      updatePrompt(id, { content: res.content, tokens: res.tokens });
+      toast.success('Prompt regenerado com sucesso!');
+    } catch (err: any) {
+      toast.error('Erro ao regenerar: ' + (err?.message || 'Tente novamente'));
+    }
   };
 
   const nicheLabels = Object.entries(
@@ -234,7 +240,7 @@ export default function HistoryPage() {
                 <button onClick={() => toggleFavorite(prompt.id)} className={cn('min-w-[36px] min-h-[36px] flex items-center justify-center p-1.5 sm:p-2 rounded-lg transition-all', prompt.favorites ? 'text-pink-400 hover:bg-pink-500/10' : 'text-zinc-500 hover:text-white hover:bg-white/5')} title="Favoritar">
                   <Heart size={15} fill={prompt.favorites ? 'currentColor' : 'none'} />
                 </button>
-                <button onClick={() => deletePrompt(prompt.id)} className="min-w-[36px] min-h-[36px] flex items-center justify-center p-1.5 sm:p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir">
+                <button onClick={() => { if (window.confirm('Tem certeza que deseja excluir este prompt?')) deletePrompt(prompt.id); }} className="min-w-[36px] min-h-[36px] flex items-center justify-center p-1.5 sm:p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir">
                   <Trash2 size={15} />
                 </button>
               </div>

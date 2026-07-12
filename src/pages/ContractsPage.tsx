@@ -348,11 +348,11 @@ function generateContractPdf(contract: Contract): jsPDF {
   for (let li = 0; li < lines.length; li++) {
     const line = lines[li];
     const next = lines[li + 1] || '';
-    const isClausula = /^\d+[ª\s]/.test(line) && line.includes(' — ');
-    const isClausulaTitle = /^CLÁUSULA/.test(line) && line.includes(' — ');
+    const isClausula = /^CLÁUSULA\s/.test(line) || /^(PRIMEIRA|SEGUNDA|TERCEIRA|QUARTA|QUINTA|SEXTA|SÉTIMA|OITAVA|NONA|DÉCIMA)/.test(line);
+    const isClausulaTitle = /^CLÁUSULA\s+\w+\s*—/.test(line);
     const isTitle = /^(CONTRATO|DISPOSIÇÕES)/.test(line);
     const isPartes = /^\d+\.\s+DAS PARTES/.test(line);
-    const isParteLine = /^(CONTRATANTE|CONTRATADO):/.test(line);
+    const isParteLine = /^(\*?\*?CONTRATANTE\*?\*?|(\*?\*?CONTRATADO\*?\*?)):\s/.test(line);
     const isSignLine = /^_{2,}/.test(line);
     const isSignLabel = /^(CONTRATANTE\s+CONTRATADO)$/.test(line);
     const isDateSection = /^DO LOCAL E DATA/.test(line);
@@ -454,32 +454,118 @@ function generateContractPdf(contract: Contract): jsPDF {
 
 function ContractDetail({ contract, onClose }: { contract: Contract; onClose: () => void }) {
   const { user } = useAuthStore();
+  const { updateContract, deleteContract } = useContractStore();
   const isPro = user?.plan === 'pro';
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState(contract);
+
   const exportPdf = () => {
     const pdf = generateContractPdf(contract);
     pdf.save(`${contract.title.replace(/\s+/g, '_')}.pdf`);
   };
 
+  const handleSave = () => {
+    updateContract(contract.id, {
+      title: editForm.title,
+      clientName: editForm.clientName,
+      clientEmail: editForm.clientEmail,
+      clientDocument: editForm.clientDocument,
+      companyName: editForm.companyName,
+      companyDocument: editForm.companyDocument,
+      totalValue: editForm.totalValue,
+      paymentMethod: editForm.paymentMethod,
+      dueDate: editForm.dueDate,
+      content: editForm.content,
+    });
+    setEditing(false);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('Tem certeza que deseja excluir este contrato?')) {
+      deleteContract(contract.id);
+      onClose();
+    }
+  };
+
+  const updateEdit = (data: Partial<Contract>) => setEditForm({ ...editForm, ...data });
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={onClose}>
       <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 0 }} exit={{ scale: 0.95, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-white">{contract.title}</h3>
+          {editing ? (
+            <input type="text" value={editForm.title} onChange={(e) => updateEdit({ title: e.target.value })} className="input-glass text-lg font-bold flex-1 mr-3" />
+          ) : (
+            <h3 className="text-lg font-bold text-white">{contract.title}</h3>
+          )}
           <div className="flex items-center gap-2">
-            {isPro ? (
-              <button onClick={exportPdf} className="btn-glass p-2"><FileDown size={16} /></button>
+            {editing ? (
+              <>
+                <button onClick={handleSave} className="btn-primary px-3 py-1.5 text-sm">Salvar</button>
+                <button onClick={() => { setEditing(false); setEditForm(contract); }} className="btn-glass px-3 py-1.5 text-sm">Cancelar</button>
+              </>
             ) : (
-              <button onClick={() => window.location.href = '/dashboard/plans'} className="btn-glass p-2 text-amber-400 border-amber-500/30"><Crown size={16} /></button>
+              <>
+                <button onClick={() => setEditing(true)} className="btn-glass p-2" title="Editar"><Edit3 size={16} /></button>
+                <button onClick={handleDelete} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir"><Trash2 size={16} /></button>
+                {isPro ? (
+                  <button onClick={exportPdf} className="btn-glass p-2"><FileDown size={16} /></button>
+                ) : (
+                  <button onClick={() => window.location.href = '/dashboard/plans'} className="btn-glass p-2 text-amber-400 border-amber-500/30"><Crown size={16} /></button>
+                )}
+                <button onClick={onClose} className="text-zinc-500 hover:text-white"><X size={20} /></button>
+              </>
             )}
-            <button onClick={onClose} className="text-zinc-500 hover:text-white"><X size={20} /></button>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className={cn('text-[10px] px-2 py-0.5 rounded-full border', statusConfig[contract.status].color)}>{statusConfig[contract.status].label}</span>
-          <span className="text-xs bg-white/5 text-zinc-400 px-2 py-0.5 rounded-full">{formatCurrency(contract.totalValue)}</span>
-          <span className="text-xs bg-white/5 text-zinc-400 px-2 py-0.5 rounded-full">{`v${contract.version}`}</span>
-        </div>
-        <pre className="text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed bg-black/30 rounded-xl p-4 max-h-[400px] overflow-y-auto">{contract.content}</pre>
+        {editing ? (
+          <div className="space-y-3 mb-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">Cliente</label>
+                <input type="text" value={editForm.clientName} onChange={(e) => updateEdit({ clientName: e.target.value })} className="input-glass w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">Email</label>
+                <input type="email" value={editForm.clientEmail} onChange={(e) => updateEdit({ clientEmail: e.target.value })} className="input-glass w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">CPF/CNPJ Cliente</label>
+                <input type="text" value={editForm.clientDocument} onChange={(e) => updateEdit({ clientDocument: e.target.value })} className="input-glass w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">Empresa</label>
+                <input type="text" value={editForm.companyName} onChange={(e) => updateEdit({ companyName: e.target.value })} className="input-glass w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">CPF/CNPJ Empresa</label>
+                <input type="text" value={editForm.companyDocument} onChange={(e) => updateEdit({ companyDocument: e.target.value })} className="input-glass w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">Valor Total</label>
+                <input type="number" value={editForm.totalValue || ''} onChange={(e) => updateEdit({ totalValue: Number(e.target.value) })} className="input-glass w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1 block">Data de Vencimento</label>
+                <input type="date" value={editForm.dueDate} onChange={(e) => updateEdit({ dueDate: e.target.value })} className="input-glass w-full" />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-2 mb-4">
+            <span className={cn('text-[10px] px-2 py-0.5 rounded-full border', statusConfig[contract.status].color)}>{statusConfig[contract.status].label}</span>
+            <span className="text-xs bg-white/5 text-zinc-400 px-2 py-0.5 rounded-full">{formatCurrency(contract.totalValue)}</span>
+            <span className="text-xs bg-white/5 text-zinc-400 px-2 py-0.5 rounded-full">{`v${contract.version}`}</span>
+          </div>
+        )}
+        {editing ? (
+          <div>
+            <label className="text-xs text-zinc-400 mb-1 block">Conteúdo do Contrato</label>
+            <textarea value={editForm.content} onChange={(e) => updateEdit({ content: e.target.value })} rows={16} className="input-glass w-full resize-none font-mono text-sm leading-relaxed" />
+          </div>
+        ) : (
+          <pre className="text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed bg-black/30 rounded-xl p-4 max-h-[400px] overflow-y-auto">{contract.content}</pre>
+        )}
       </motion.div>
     </motion.div>
   );
@@ -540,12 +626,13 @@ export default function ContractsPage() {
         <h1>${contract.title}</h1>
         <hr />
         <div id="content">${contract.content.split('\n').map((l) => {
-          if (/^\d+[ª\s]/.test(l) && l.includes(' — ')) return `<p class="clausula">${l}</p>`;
+          if (/^CLÁUSULA\s/.test(l) || /^(PRIMEIRA|SEGUNDA|TERCEIRA|QUARTA|QUINTA|SEXTA|SÉTIMA|OITAVA|NONA|DÉCIMA)/.test(l)) return `<p class="clausula">${l}</p>`;
           if (/^(CONTRATO|DISPOSIÇÕES)/.test(l)) return `<h1 style="font-size:14pt;margin-top:14pt">${l}</h1>`;
           if (/^\d+\.\s+DAS PARTES/.test(l)) return `<p style="font-family:Arial,sans-serif;font-weight:700;font-size:12pt;margin-top:10pt">${l}</p>`;
-          if (/^(CONTRATANTE|CONTRATADO):/.test(l)) {
+          if (/^(\*?\*?CONTRATANTE\*?\*?|(\*?\*?CONTRATADO\*?\*?)):\s/.test(l)) {
             const [label, ...rest] = l.split(': ');
-            return `<p><strong>${label}:</strong> ${rest.join(': ')}</p>`;
+            const cleanLabel = label.replace(/\*/g, '');
+            return `<p><strong>${cleanLabel}:</strong> ${rest.join(': ')}</p>`;
           }
           if (/^_{2,}/.test(l)) return '';
           if (/^(CONTRATANTE\s+CONTRATADO)$/.test(l)) {

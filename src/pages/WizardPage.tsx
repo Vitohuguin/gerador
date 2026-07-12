@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -7,7 +8,17 @@ import {
   Monitor, FileText, CheckCircle2, Zap, ChevronLeft,
   ChevronRight, Check, Copy, Download, Heart, Share2,
   Save, RotateCcw, Edit3, Upload, Plus, X, FileDown,
-  Star, ArrowLeft, ExternalLink, Crown,
+  Star, ExternalLink, Crown, KeyRound,
+  MessageCircle, MessageSquare, Moon, Languages, Database,
+  CreditCard, LogIn, BarChart3, Bell, Search, Filter,
+  ArrowUpDown, Mail, Calendar, Info, Briefcase, Package,
+  Rocket, Images, Image, FolderOpen, Film, Handshake,
+  DollarSign, Gift, MapPin, HelpCircle, UserCircle, Globe,
+  CircleDot, Gem, Feather, Cpu, GlassWater, Cloud,
+  BookOpen, Gamepad2, ShoppingBag, Trophy, Sun, Apple,
+  ShoppingCart, Settings, Smartphone, Ticket, Store, Lock,
+  GraduationCap, UtensilsCrossed, Hotel, Stethoscope, Megaphone,
+  PartyPopper, Pencil, Terminal, Wind,
 } from 'lucide-react';
 import { useWizardStore } from '@/store/wizardStore';
 import { usePromptStore } from '@/store/promptStore';
@@ -40,7 +51,19 @@ const stepVariants = {
 const iconMap: Record<string, React.ElementType> = {
   Layers, Building2, Target, Users, Palette, Droplets,
   TextCursorInput, Sparkles, Layout, Settings2, Code2,
-  Monitor, FileText, CheckCircle2, Zap,
+  Monitor, FileText, CheckCircle2, Zap, KeyRound, Globe,
+  LogIn, User: Users, Moon, Languages, Code: Code2,
+  Database, CreditCard, Calendar, Bell, Search, Filter,
+  ArrowUpDown, Upload, Download, FileDown, MessageCircle,
+  MessageSquare, Mail, Share2, LayoutDashboard: Layout,
+  BarChart3, Info, Briefcase, Package, Rocket, Images,
+  Image, FolderOpen, Film, Handshake, DollarSign, Gift,
+  MapPin, HelpCircle, UserCircle, Star, Heart, Target,
+  CircleDot, Gem, Feather, Cpu, GlassWater, Cloud,
+  BookOpen, Gamepad2, ShoppingBag, Trophy, Sun, Apple,
+  ShoppingCart, Settings, Smartphone, Ticket, Store, Lock,
+  GraduationCap, UtensilsCrossed, Hotel, Stethoscope, Megaphone,
+  PartyPopper, Pencil, Terminal, Wind, Triangle: Zap,
 };
 
 function NicheStep() {
@@ -111,80 +134,246 @@ function NicheStep() {
 
 function CompanyStep() {
   const store = useWizardStore();
-  const { companyName, slogan, city, state, country, businessDescription, marketTime, socialMedia, googleMaps, currentSite, updateField } = store;
-    const fields = [
-    { key: 'companyName', label: 'Nome da Empresa', placeholder: 'Minha Empresa' },
-    { key: 'slogan', label: 'Slogan', placeholder: 'Seu slogan aqui' },
-      { key: 'city', label: 'Cidade', placeholder: 'Sao Paulo' },
-    { key: 'state', label: 'Estado', placeholder: 'SP' },
-    { key: 'country', label: 'Pais', placeholder: 'Brasil' },
-    { key: 'businessDescription', label: 'Descricao do Negocio', placeholder: 'Descreva seu negocio...', big: true },
-    { key: 'marketTime', label: 'Tempo de Mercado', placeholder: '5 anos' },
-    { key: 'socialMedia', label: 'Redes Sociais', placeholder: '@seuinstagram' },
-    { key: 'googleMaps', label: 'Google Maps', placeholder: 'Link do Google Maps' },
-    { key: 'currentSite', label: 'Site Atual', placeholder: 'https://seusite.com' },
-  ];
+  const {
+    companyName, slogan, segment, city, state, country, neighborhood, address,
+    businessDescription, whatsapp, phone, email, currentSite,
+    googleMaps, instagram, facebook, updateField
+  } = store;
+
   return (
     <div className="space-y-3 sm:space-y-4 max-w-2xl mx-auto">
       <div className="text-center mb-3 sm:mb-4">
         <h3 className="text-lg sm:text-xl font-bold text-white">{'Dados da Empresa'}</h3>
         <p className="text-xs sm:text-sm text-zinc-400 mt-1">{'Informe os dados do seu negocio'}</p>
       </div>
-      {fields.map((f) => {
-        const val = store[f.key as keyof typeof store] as string || '';
-        return (
-        <div key={f.key}>
-          <label className="text-xs sm:text-sm text-zinc-300 mb-1 sm:mb-1.5 block">{f.label}</label>
-          {f.big ? (
+
+      <div className="glass-card p-3 sm:p-4 space-y-3">
+        <p className="text-xs font-bold text-zinc-300 flex items-center gap-1"><Building2 size={14} /> Básico</p>
+        <div className="space-y-3">
+          {[
+            { key: 'companyName', label: 'Nome da Empresa', placeholder: 'Minha Empresa' },
+            { key: 'slogan', label: 'Slogan', placeholder: 'Seu slogan aqui' },
+            { key: 'segment', label: 'Segmento/Nicho', placeholder: 'Assistência técnica de celulares' },
+          ].map(f => (
+            <div key={f.key}>
+              <label className="text-xs text-zinc-300 mb-1 block">{f.label}</label>
+              <input
+                type="text"
+                value={(store[f.key as keyof typeof store] as string) || ''}
+                onChange={(e) => updateField(f.key, e.target.value)}
+                placeholder={f.placeholder}
+                className="input-glass"
+              />
+            </div>
+          ))}
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">{'Descricao do Negocio'}</label>
             <textarea
-              value={val}
-              onChange={(e) => updateField(f.key, e.target.value)}
-              placeholder={f.placeholder}
+              value={businessDescription}
+              onChange={(e) => updateField('businessDescription', e.target.value)}
+              placeholder="Descreva seu negocio..."
               rows={3}
               className="input-glass resize-none"
             />
-          ) : (
+          </div>
+        </div>
+      </div>
+
+      <div className="glass-card p-3 sm:p-4 space-y-3">
+        <p className="text-xs font-bold text-zinc-300 flex items-center gap-1"><MapPin size={14} /> Localização</p>
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { key: 'country', label: 'País', placeholder: 'Brasil' },
+            { key: 'state', label: 'Estado', placeholder: 'SP' },
+            { key: 'city', label: 'Cidade', placeholder: 'São Paulo' },
+          ].map(f => (
+            <div key={f.key}>
+              <label className="text-xs text-zinc-300 mb-1 block">{f.label}</label>
+              <input
+                type="text"
+                value={(store[f.key as keyof typeof store] as string) || ''}
+                onChange={(e) => updateField(f.key, e.target.value)}
+                placeholder={f.placeholder}
+                className="input-glass"
+              />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { key: 'neighborhood', label: 'Bairro', placeholder: 'Centro' },
+            { key: 'address', label: 'Endereço', placeholder: 'Rua Exemplo, 123' },
+          ].map(f => (
+            <div key={f.key}>
+              <label className="text-xs text-zinc-300 mb-1 block">{f.label} (opcional)</label>
+              <input
+                type="text"
+                value={(store[f.key as keyof typeof store] as string) || ''}
+                onChange={(e) => updateField(f.key, e.target.value)}
+                placeholder={f.placeholder}
+                className="input-glass"
+              />
+            </div>
+          ))}
+        </div>
+        <div>
+          <label className="text-xs text-zinc-300 mb-1 block">Google Maps</label>
+          <input
+            type="text"
+            value={googleMaps}
+            onChange={(e) => updateField('googleMaps', e.target.value)}
+            placeholder="Link do Google Maps"
+            className="input-glass"
+          />
+        </div>
+      </div>
+
+      <div className="glass-card p-3 sm:p-4 space-y-3">
+        <p className="text-xs font-bold text-zinc-300 flex items-center gap-1"><MessageCircle size={14} /> Contato</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">WhatsApp</label>
             <input
               type="text"
-              value={val}
-              onChange={(e) => updateField(f.key, e.target.value)}
-              placeholder={f.placeholder}
+              value={whatsapp}
+              onChange={(e) => updateField('whatsapp', e.target.value)}
+              placeholder="(11) 99999-9999"
               className="input-glass"
             />
-          )}
+          </div>
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">Telefone</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => updateField('phone', e.target.value)}
+              placeholder="(11) 3333-3333"
+              className="input-glass"
+            />
+          </div>
         </div>
-        );
-      })}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">E-mail</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => updateField('email', e.target.value)}
+              placeholder="contato@empresa.com"
+              className="input-glass"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">Site Atual</label>
+            <input
+              type="text"
+              value={currentSite}
+              onChange={(e) => updateField('currentSite', e.target.value)}
+              placeholder="https://seusite.com"
+              className="input-glass"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="glass-card p-3 sm:p-4 space-y-3">
+        <p className="text-xs font-bold text-zinc-300 flex items-center gap-1"><Globe size={14} /> Redes Sociais</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">Instagram</label>
+            <input
+              type="text"
+              value={instagram}
+              onChange={(e) => updateField('instagram', e.target.value)}
+              placeholder="@seuinstagram"
+              className="input-glass"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-zinc-300 mb-1 block">Facebook</label>
+            <input
+              type="text"
+              value={facebook}
+              onChange={(e) => updateField('facebook', e.target.value)}
+              placeholder="facebook.com/suaempresa"
+              className="input-glass"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 function ObjectiveStep() {
-  const { objective, updateField } = useWizardStore();
-    return (
+  const { objective, customObjective, updateField } = useWizardStore();
+  const [showCustom, setShowCustom] = useState(objective === 'custom');
+
+  const categories = [
+    { key: 'sites', label: '🌐 Sites' },
+    { key: 'aplicacoes', label: '📱 Aplicações' },
+    { key: 'negocios', label: '💼 Negócios' },
+    { key: 'marketing', label: '📈 Marketing' },
+    { key: 'custom', label: '🤖 Personalizado' },
+  ];
+
+  const handleSelect = (obj: typeof OBJECTIVES[0]) => {
+    if (obj.id === 'custom') {
+      setShowCustom(true);
+      updateField('objective', 'custom');
+    } else {
+      setShowCustom(false);
+      updateField('objective', obj.id);
+      updateField('customObjective', '');
+    }
+  };
+
+  return (
     <div className="space-y-4">
       <div className="text-center mb-4">
         <h3 className="text-xl font-bold text-white">{'Objetivo do Projeto'}</h3>
         <p className="text-zinc-400 mt-1">{'Qual o principal objetivo deste projeto?'}</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto pr-1 sm:pr-2">
-        {OBJECTIVES.map((obj) => {
-          const Icon = iconMap[obj.icon] || FileText;
-          const isSelected = objective === obj.label;
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        {categories.map((cat) => {
+          const items = OBJECTIVES.filter((o) => o.category === cat.key);
+          if (items.length === 0) return null;
           return (
-            <button
-              key={obj.label}
-              onClick={() => updateField('objective', isSelected ? '' : obj.label)}
-              className={cn(
-                'glass-card p-3 sm:p-4 text-left transition-all',
-                isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10'
+            <div key={cat.key}>
+              <h4 className="text-xs sm:text-sm font-medium text-zinc-300 mb-2">{cat.label}</h4>
+              {cat.key === 'custom' && showCustom ? (
+                <div className="glass-card p-4">
+                  <textarea
+                    value={customObjective || ''}
+                    onChange={(e) => updateField('customObjective', e.target.value)}
+                    placeholder="Descreva o projeto. Ex: Plataforma para pet shop, Sistema para lava-jato, Aplicativo para academia..."
+                    rows={3}
+                    className="input-glass resize-none w-full"
+                  />
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {items.map((obj) => {
+                    const isSelected = objective === obj.id;
+                    const Icon = iconMap[obj.icon] || FileText;
+                    return (
+                      <button
+                        key={obj.id}
+                        onClick={() => handleSelect(obj)}
+                        className={cn(
+                          'glass-card p-3 text-left transition-all',
+                          isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10'
+                        )}
+                      >
+                        <Icon size={14} className={cn(isSelected ? 'text-purple-400' : 'text-zinc-400')} />
+                        <p className="text-xs font-medium text-white mt-1">{obj.label}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5 hidden sm:block">{obj.description}</p>
+                      </button>
+                    );
+                  })}
+                </div>
               )}
-            >
-              <Icon size={18} className={cn('sm:hidden', isSelected ? 'text-purple-400' : 'text-zinc-400')} />
-              <Icon size={20} className={cn('hidden sm:block', isSelected ? 'text-purple-400' : 'text-zinc-400')} />
-              <p className="text-xs sm:text-sm font-medium text-white mt-1 sm:mt-2">{obj.label}</p>
-              <p className="text-[10px] sm:text-xs text-zinc-500 mt-0.5 sm:mt-1 hidden xs:block">{obj.description}</p>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -241,33 +430,50 @@ function StyleStep() {
   const { style, updateField } = useWizardStore();
   const { user } = useAuthStore();
   const isPro = user?.plan === 'pro';
-    return (
+
+  const categories = [
+    { key: 'estilo', label: '🎨 Estilo Visual' },
+    { key: 'tema', label: '🌗 Tema' },
+  ];
+
+  return (
     <div className="space-y-4">
       <div className="text-center mb-4">
         <h3 className="text-xl font-bold text-white">{'Estilo Visual'}</h3>
         <p className="text-zinc-400 mt-1">{'Escolha o estilo visual do projeto'}</p>
       </div>
-      <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto pr-1 sm:pr-2">
-        {STYLES.map((s) => {
-          const isSelected = style === s.label;
-          const isLocked = s.premium && !isPro;
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        {categories.map((cat) => {
+          const items = STYLES.filter((s) => s.category === cat.key);
+          if (items.length === 0) return null;
           return (
-            <button
-              key={s.label}
-              onClick={() => { if (!isLocked) updateField('style', isSelected ? '' : s.label); }}
-              className={cn(
-                'glass-card p-3 sm:p-4 text-left transition-all',
-                isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10',
-                isLocked && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              <div className="flex items-center gap-1.5 mb-0.5 sm:mb-1">
-                <p className="text-base sm:text-lg">{s.icon}</p>
-                {isLocked && <Star size={12} className="text-amber-400 fill-amber-400" />}
+            <div key={cat.key}>
+              <h4 className="text-xs sm:text-sm font-medium text-zinc-300 mb-2">{cat.label}</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {items.map((s) => {
+                  const isSelected = style === s.id;
+                  const isLocked = s.premium && !isPro;
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => { if (!isLocked) updateField('style', isSelected ? '' : s.id); }}
+                      className={cn(
+                        'glass-card p-3 text-left transition-all',
+                        isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10',
+                        isLocked && 'opacity-50 cursor-not-allowed'
+                      )}
+                    >
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <p className="text-sm">{s.icon}</p>
+                        {isLocked && <Star size={10} className="text-amber-400 fill-amber-400" />}
+                      </div>
+                      <p className="text-xs font-medium text-white">{s.label}</p>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 hidden sm:block">{s.description}</p>
+                    </button>
+                  );
+                })}
               </div>
-              <p className="text-xs sm:text-sm font-medium text-white">{s.label}</p>
-              <p className="text-[10px] sm:text-xs text-zinc-500 mt-0.5 sm:mt-1 hidden xs:block">{s.description}</p>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -277,6 +483,20 @@ function StyleStep() {
 
 function ColorsStep() {
   const { primaryColor, secondaryColor, updateField } = useWizardStore();
+
+  const colorPairs: Record<string, { primary: string; secondary: string }> = {
+    '#A855F7': { primary: '#A855F7', secondary: '#EC4899' },
+    '#3B82F6': { primary: '#3B82F6', secondary: '#06B6D4' },
+    '#10B981': { primary: '#10B981', secondary: '#34D399' },
+    '#F59E0B': { primary: '#F59E0B', secondary: '#EF4444' },
+    '#EF4444': { primary: '#EF4444', secondary: '#F97316' },
+    '#EC4899': { primary: '#EC4899', secondary: '#A855F7' },
+    '#06B6D4': { primary: '#06B6D4', secondary: '#3B82F6' },
+    '#8B5CF6': { primary: '#8B5CF6', secondary: '#D946EF' },
+    '#F97316': { primary: '#F97316', secondary: '#F59E0B' },
+    '#14B8A6': { primary: '#14B8A6', secondary: '#10B981' },
+  };
+
     return (
     <div className="space-y-6">
       <div className="text-center mb-4">
@@ -315,7 +535,7 @@ function ColorsStep() {
         {['#A855F7', '#10B981', '#3B82F6', '#EF4444', '#F97316', '#EC4899', '#06B6D4', '#EAB308'].map((c) => (
           <button
             key={c}
-            onClick={() => { updateField('primaryColor', c); updateField('secondaryColor', c === '#A855F7' ? '#D946EF' : '#A855F7'); }}
+            onClick={() => { const pair = colorPairs[c] || { primary: c, secondary: '#D946EF' }; updateField('primaryColor', pair.primary); updateField('secondaryColor', pair.secondary); }}
             className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg border-2 border-white/10 hover:scale-110 transition-transform"
             style={{ backgroundColor: c }}
           />
@@ -327,6 +547,15 @@ function ColorsStep() {
 
 function FontStep() {
   const { font, updateField } = useWizardStore();
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=General+Sans:wght@300;400;500;600;700&family=Satoshi:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, []);
+
     return (
     <div className="space-y-4">
       <div className="text-center mb-4">
@@ -360,33 +589,53 @@ function AnimationsStep() {
   const { animations, toggleAnimation } = useWizardStore();
   const { user } = useAuthStore();
   const isPro = user?.plan === 'pro';
-    return (
+
+  const categories = [
+    { key: 'entrada', label: '✨ Entrada' },
+    { key: 'interacao', label: '🖱️ Interação' },
+    { key: 'scroll', label: '📜 Scroll' },
+    { key: 'navegacao', label: '📄 Navegação' },
+    { key: 'texto', label: '🔤 Texto' },
+    { key: 'efeitos', label: '🎨 Efeitos Visuais' },
+  ];
+
+  return (
     <div className="space-y-4">
       <div className="text-center mb-4">
-        <h3 className="text-xl font-bold text-white">{'Animacoes'}</h3>
-        <p className="text-zinc-400 mt-1">{'Selecione as animacoes do projeto'}</p>
+        <h3 className="text-xl font-bold text-white">{'Animações'}</h3>
+        <p className="text-zinc-400 mt-1">{'Selecione as animações do projeto'}</p>
       </div>
-      <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto pr-1 sm:pr-2">
-        {ANIMATIONS_LIST.map((a) => {
-          const isSelected = animations.includes(a.id);
-          const isLocked = a.premium && !isPro;
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        {categories.map((cat) => {
+          const items = ANIMATIONS_LIST.filter((a) => a.category === cat.key);
+          if (items.length === 0) return null;
           return (
-            <button
-              key={a.id}
-              onClick={() => { if (!isLocked) toggleAnimation(a.id as AnimationType); }}
-              className={cn(
-                'glass-card p-3 sm:p-4 text-left transition-all',
-                isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10',
-                isLocked && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs sm:text-sm font-medium text-white">{a.label}</p>
-                {isLocked && <Star size={10} className="text-amber-400 fill-amber-400 shrink-0" />}
+            <div key={cat.key}>
+              <h4 className="text-xs sm:text-sm font-medium text-zinc-300 mb-2">{cat.label}</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {items.map((a) => {
+                  const isSelected = animations.includes(a.id);
+                  const isLocked = a.premium && !isPro;
+                  return (
+                    <button
+                      key={a.id}
+                      onClick={() => { if (!isLocked) toggleAnimation(a.id as AnimationType); }}
+                      className={cn(
+                        'glass-card p-3 text-left transition-all',
+                        isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10',
+                        isLocked && 'opacity-50 cursor-not-allowed'
+                      )}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-xs font-medium text-white">{a.label}</p>
+                        {isLocked && <Star size={10} className="text-amber-400 fill-amber-400 shrink-0" />}
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 hidden sm:block">{a.description}</p>
+                    </button>
+                  );
+                })}
               </div>
-              <p className="text-[10px] sm:text-xs text-zinc-500 mt-0.5 sm:mt-1 hidden xs:block">{a.description}</p>
-              <span className="text-[10px] text-zinc-600 mt-0.5 sm:mt-1 block capitalize">{a.category}</span>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -396,30 +645,50 @@ function AnimationsStep() {
 
 function StructureStep() {
   const { structures, toggleStructure } = useWizardStore();
-    return (
+
+  const categories = [
+    { key: 'principais', label: '🏠 Principais' },
+    { key: 'conteudo', label: '📸 Conteúdo' },
+    { key: 'credibilidade', label: '👥 Credibilidade' },
+    { key: 'comercial', label: '💰 Comercial' },
+    { key: 'informacao', label: '📚 Informação' },
+    { key: 'sistema', label: '🔒 Sistema' },
+  ];
+
+  return (
     <div className="space-y-4">
       <div className="text-center mb-4">
         <h3 className="text-xl font-bold text-white">{'Estrutura do Site'}</h3>
-        <p className="text-zinc-400 mt-1">{'Selecione as secoes do site'}</p>
+        <p className="text-zinc-400 mt-1">{'Selecione as seções do site'}</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto pr-1 sm:pr-2">
-        {STRUCTURES.map((s) => {
-          const isSelected = structures.includes(s.id);
-          const Icon = iconMap[s.icon] || Layout;
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        {categories.map((cat) => {
+          const items = STRUCTURES.filter((s) => s.category === cat.key);
+          if (items.length === 0) return null;
           return (
-            <button
-              key={`${s.id}-${s.label}`}
-              onClick={() => toggleStructure(s.id as SiteStructure)}
-              className={cn(
-                'glass-card p-3 sm:p-4 text-left transition-all',
-                isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10'
-              )}
-            >
-              <Icon size={16} className={cn('sm:hidden', isSelected ? 'text-purple-400' : 'text-zinc-400')} />
-              <Icon size={18} className={cn('hidden sm:block', isSelected ? 'text-purple-400' : 'text-zinc-400')} />
-              <p className="text-xs sm:text-sm font-medium text-white mt-1 sm:mt-2">{s.label}</p>
-              <p className="text-[10px] sm:text-xs text-zinc-500 mt-0.5 hidden xs:block">{s.description}</p>
-            </button>
+            <div key={cat.key}>
+              <h4 className="text-xs sm:text-sm font-medium text-zinc-300 mb-2">{cat.label}</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {items.map((s) => {
+                  const isSelected = structures.includes(s.id);
+                  const Icon = iconMap[s.icon] || Layout;
+                  return (
+                    <button
+                      key={`${s.id}-${s.label}`}
+                      onClick={() => toggleStructure(s.id as SiteStructure)}
+                      className={cn(
+                        'glass-card p-3 text-left transition-all',
+                        isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10'
+                      )}
+                    >
+                      <Icon size={14} className={cn(isSelected ? 'text-purple-400' : 'text-zinc-400')} />
+                      <p className="text-xs font-medium text-white mt-1">{s.label}</p>
+                      <p className="text-[10px] text-zinc-500 mt-0.5 hidden sm:block">{s.description}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
       </div>
@@ -429,37 +698,58 @@ function StructureStep() {
 
 function FeaturesStep() {
   const { functionalities, toggleFunctionality } = useWizardStore();
-    return (
+
+  const categories = [
+    { key: 'usuarios', label: '👤 Usuários' },
+    { key: 'painel', label: '📊 Painel' },
+    { key: 'pesquisa', label: '🔍 Pesquisa' },
+    { key: 'arquivos', label: '📂 Arquivos' },
+    { key: 'comunicacao', label: '💬 Comunicação' },
+    { key: 'sistema', label: '🌍 Sistema' },
+    { key: 'comercial', label: '💰 Comercial' },
+  ];
+
+  return (
     <div className="space-y-4">
       <div className="text-center mb-4">
         <h3 className="text-xl font-bold text-white">{'Funcionalidades'}</h3>
         <p className="text-zinc-400 mt-1">{'Selecione as funcionalidades do sistema'}</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto pr-1 sm:pr-2">
-        {FUNCTIONALITIES.map((func) => {
-          const isSelected = functionalities.includes(func.id);
-          const Icon = iconMap[func.icon] || Settings2;
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        {categories.map((cat) => {
+          const items = FUNCTIONALITIES.filter((f) => f.category === cat.key);
+          if (items.length === 0) return null;
           return (
-            <button
-              key={`${func.id}-${func.label}`}
-              onClick={() => toggleFunctionality(func.id as Functionality)}
-              className={cn(
-                'glass-card p-3 sm:p-4 text-left transition-all',
-                isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10'
-              )}
-            >
-              <Icon size={16} className={cn('sm:hidden', isSelected ? 'text-purple-400' : 'text-zinc-400')} />
-              <Icon size={18} className={cn('hidden sm:block', isSelected ? 'text-purple-400' : 'text-zinc-400')} />
-              <p className="text-xs sm:text-sm font-medium text-white mt-1 sm:mt-2">{func.label}</p>
-              <span className={cn(
-                'text-[10px] px-1.5 py-0.5 rounded mt-0.5 sm:mt-1 inline-block',
-                func.complexity === 'low' ? 'bg-emerald-500/10 text-emerald-400' :
-                func.complexity === 'medium' ? 'bg-amber-500/10 text-amber-400' :
-                'bg-red-500/10 text-red-400'
-              )}>
-                {func.complexity}
-              </span>
-            </button>
+            <div key={cat.key}>
+              <h4 className="text-xs sm:text-sm font-medium text-zinc-300 mb-2">{cat.label}</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {items.map((func) => {
+                  const isSelected = functionalities.includes(func.id);
+                  const Icon = iconMap[func.icon] || Settings2;
+                  return (
+                    <button
+                      key={`${func.id}-${func.label}`}
+                      onClick={() => toggleFunctionality(func.id as Functionality)}
+                      className={cn(
+                        'glass-card p-3 text-left transition-all',
+                        isSelected ? 'border-purple-500/50 bg-purple-500/10 ring-1 ring-purple-500/30' : 'hover:border-white/10'
+                      )}
+                    >
+                      <Icon size={14} className={cn(isSelected ? 'text-purple-400' : 'text-zinc-400')} />
+                      <p className="text-xs font-medium text-white mt-1">{func.label}</p>
+                      <span className={cn(
+                        'text-[10px] px-1.5 py-0.5 rounded mt-1 inline-block',
+                        func.complexity === 'low' ? 'bg-emerald-500/10 text-emerald-400' :
+                        func.complexity === 'medium' ? 'bg-amber-500/10 text-amber-400' :
+                        'bg-red-500/10 text-red-400'
+                      )}>
+                        {func.complexity}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
       </div>
@@ -470,11 +760,33 @@ function FeaturesStep() {
 function TechStep() {
   const { technologies, toggleTechnology } = useWizardStore();
     const categories = [
+    { key: 'auto', label: 'Inteligente' },
     { key: 'frontend', label: 'Frontend' },
+    { key: 'estilo', label: 'Estilo' },
+    { key: 'ui', label: 'UI' },
+    { key: 'animacoes', label: 'Animações' },
     { key: 'backend', label: 'Backend' },
     { key: 'database', label: 'Banco de Dados' },
     { key: 'hosting', label: 'Hospedagem' },
   ];
+
+  const handleToggle = (techId: string) => {
+    if (techId === 'auto') {
+      if (technologies.includes('auto')) {
+        useWizardStore.setState({ technologies: [] });
+      } else {
+        const popularIds = TECHNOLOGIES.filter(t => t.popular).map(t => t.id);
+        useWizardStore.setState({ technologies: popularIds });
+      }
+    } else {
+      if (technologies.includes(techId)) {
+        toggleTechnology(techId);
+      } else {
+        const withoutAuto = technologies.filter(t => t !== 'auto');
+        useWizardStore.setState({ technologies: [...withoutAuto, techId] });
+      }
+    }
+  };
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center mb-3 sm:mb-4">
@@ -492,7 +804,7 @@ function TechStep() {
                 return (
                   <button
                     key={t.id}
-                    onClick={() => toggleTechnology(t.id)}
+                    onClick={() => handleToggle(t.id)}
                     className={cn(
                       'px-3 py-2 rounded-xl text-sm transition-all border',
                       isSelected
@@ -500,7 +812,7 @@ function TechStep() {
                         : 'glass-card text-zinc-400 border-white/5 hover:border-white/10'
                     )}
                   >
-                    {t.icon} {t.label}
+                    {t.icon} {t.label} {t.popular && '⭐'}
                   </button>
                 );
               })}
@@ -549,6 +861,7 @@ function BriefingStep() {
   const { briefingNotes, referenceUrl, description, additionalContext } = useWizardStore();
   const { user } = useAuthStore();
   const [files, setFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isPro = user?.plan === 'pro';
   const { description: desc, additionalContext: addCtx, updateField } = useWizardStore();
   
@@ -601,11 +914,11 @@ function BriefingStep() {
       {isPro && (
         <div>
           <label className="text-sm text-zinc-300 mb-1.5 block">{'Upload de Arquivos'}</label>
-          <div className="glass-card p-6 text-center">
+          <div className="glass-card p-6 text-center cursor-pointer hover:border-white/10 transition-all" onClick={() => fileInputRef.current?.click()}>
             <Upload size={24} className="text-zinc-500 mx-auto mb-2" />
             <p className="text-sm text-zinc-400">{'Arraste arquivos ou clique para enviar'}</p>
             <p className="text-xs text-zinc-600 mt-1">{'PDF, DOCX, TXT (max 10MB)'}</p>
-            <input type="file" multiple className="hidden" onChange={(e) => {
+            <input type="file" multiple className="hidden" ref={fileInputRef} onChange={(e) => {
               if (e.target.files) setFiles([...files, ...Array.from(e.target.files)]);
             }} />
             {files.length > 0 && (
@@ -640,6 +953,8 @@ function ReviewStep() {
     { step: 10, label: 'Funcionalidades', value: wizard.functionalities.length > 0 ? `${wizard.functionalities.length} ${'selecionados'}` : 'Nenhum' },
     { step: 11, label: 'Tecnologias', value: wizard.technologies.length > 0 ? `${wizard.technologies.length} ${'selecionados'}` : 'Nenhum' },
     { step: 12, label: 'Plataforma', value: wizard.platform || 'Nao definido' },
+    { step: 13, label: 'Briefing', value: wizard.briefingNotes || 'Nao preenchido' },
+    { step: 14, label: 'Idioma', value: wizard.language === 'pt' ? 'Portugues' : wizard.language === 'en' ? 'English' : wizard.language || 'Portugues' },
   ];
 
   return (
@@ -685,6 +1000,8 @@ function GenerateStep() {
   const [improving, setImproving] = useState(false);
   const [correcting, setCorrecting] = useState(false);
   const [alternating, setAlternating] = useState(false);
+  const [tokenCount, setTokenCount] = useState(0);
+  const [showExport, setShowExport] = useState(false);
 
   const generatePrompt = async () => {
     setGenerating(true);
@@ -717,9 +1034,27 @@ function GenerateStep() {
         referenceUrl: wizard.referenceUrl,
         description: wizard.description,
         additionalContext: wizard.additionalContext,
+        companyName: wizard.companyName,
+        slogan: wizard.slogan,
+        segment: wizard.segment,
+        city: wizard.city,
+        state: wizard.state,
+        country: wizard.country,
+        neighborhood: wizard.neighborhood,
+        address: wizard.address,
+        businessDescription: wizard.businessDescription,
+        whatsapp: wizard.whatsapp,
+        phone: wizard.phone,
+        email: wizard.email,
+        currentSite: wizard.currentSite,
+        googleMaps: wizard.googleMaps,
+        instagram: wizard.instagram,
+        facebook: wizard.facebook,
+        customObjective: wizard.customObjective,
       };
       const res = await nvidiaAPI.generatePrompt(data, wizard.language);
       setResult(res.content);
+      setTokenCount(res.tokens || Math.floor(res.content.length / 4));
       setGenerating(false);
       setStage(ANIMATION_STAGES.length);
       clearInterval(interval);
@@ -753,11 +1088,12 @@ function GenerateStep() {
       functionalities: wizard.functionalities,
       font: wizard.font,
       colorScheme: wizard.colorScheme,
-      tokens: Math.floor(result.length / 2),
+      tokens: tokenCount,
       userId: user?.id || '',
       status: 'generated',
     });
     setSaved(true);
+    toast.success('Prompt salvo com sucesso!');
     setTimeout(() => setSaved(false), 2000);
   };
 
@@ -767,8 +1103,8 @@ function GenerateStep() {
     try {
       const improved = await nvidiaAPI.improvePrompt(result);
       setResult(improved);
-    } catch {
-      // silently fail
+    } catch (err: any) {
+      toast.error('Erro ao melhorar prompt: ' + (err?.message || 'Tente novamente'));
     } finally {
       setImproving(false);
     }
@@ -780,8 +1116,8 @@ function GenerateStep() {
     try {
       const corrected = await nvidiaAPI.correctPrompt(result);
       setResult(corrected);
-    } catch {
-      // silently fail
+    } catch (err: any) {
+      toast.error('Erro ao corrigir prompt: ' + (err?.message || 'Tente novamente'));
     } finally {
       setCorrecting(false);
     }
@@ -793,21 +1129,36 @@ function GenerateStep() {
     try {
       const alt = await nvidiaAPI.generateAlternative(result);
       setResult(alt);
-    } catch {
-      // silently fail
+    } catch (err: any) {
+      toast.error('Erro ao gerar versão alternativa: ' + (err?.message || 'Tente novamente'));
     } finally {
       setAlternating(false);
     }
   };
 
-  const exportAs = (format: 'txt' | 'md' | 'pdf') => {
-    const blob = new Blob([result], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = window.document.createElement('a');
-    a.href = url;
-    a.download = `prompt-${wizard.objective || 'projeto'}.${format}`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const exportAs = async (format: 'txt' | 'md' | 'pdf') => {
+    if (format === 'pdf') {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const lines = doc.splitTextToSize(result, 180);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      let y = 20;
+      for (const line of lines) {
+        if (y > 275) { doc.addPage(); y = 20; }
+        doc.text(line, 15, y);
+        y += 6;
+      }
+      doc.save(`prompt-${wizard.objective || 'projeto'}.pdf`);
+    } else {
+      const blob = new Blob([result], { type: format === 'md' ? 'text/markdown' : 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = window.document.createElement('a');
+      a.href = url;
+      a.download = `prompt-${wizard.objective || 'projeto'}.${format}`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   return (
@@ -956,23 +1307,25 @@ function GenerateStep() {
                 {alternating ? 'Gerando...' : 'Versão Alternativa'}
               </button>
             )}
-            <div className="relative col-span-2 sm:col-auto group/export">
-              <button className="btn-glass flex items-center justify-center gap-2 text-sm px-3 py-2 w-full">
+            <div className="relative col-span-2 sm:col-auto">
+              <button onClick={() => setShowExport(!showExport)} className="btn-glass flex items-center justify-center gap-2 text-sm px-3 py-2 w-full">
                 <FileDown size={16} /> {'Exportar'}
               </button>
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover/export:block z-10">
-                <div className="glass-card p-1 flex">
-                  <button onClick={() => exportAs('txt')} className="px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">TXT</button>
-                  <button onClick={() => exportAs('md')} className="px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">MD</button>
-                  {isPro ? (
-                    <button onClick={() => exportAs('pdf')} className="px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">PDF</button>
-                  ) : (
-                    <button onClick={() => navigate('/dashboard/plans')} className="px-3 py-2 text-xs text-amber-400 hover:text-amber-300 rounded-lg transition-colors flex items-center gap-1">
-                      <Crown size={10} /> PDF
-                    </button>
-                  )}
+              {showExport && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 z-10">
+                  <div className="glass-card p-1 flex">
+                    <button onClick={() => { exportAs('txt'); setShowExport(false); }} className="px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">TXT</button>
+                    <button onClick={() => { exportAs('md'); setShowExport(false); }} className="px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">MD</button>
+                    {isPro ? (
+                      <button onClick={() => { exportAs('pdf'); setShowExport(false); }} className="px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">PDF</button>
+                    ) : (
+                      <button onClick={() => { navigate('/dashboard/plans'); setShowExport(false); }} className="px-3 py-2 text-xs text-amber-400 hover:text-amber-300 rounded-lg transition-colors flex items-center gap-1">
+                        <Crown size={10} /> PDF
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
