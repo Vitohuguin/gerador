@@ -58,7 +58,7 @@ const iconMap: Record<string, React.ElementType> = {
   MessageSquare, Mail, Share2, LayoutDashboard: Layout,
   BarChart3, Info, Briefcase, Package, Rocket, Images,
   Image, FolderOpen, Film, Handshake, DollarSign, Gift,
-  MapPin, HelpCircle, UserCircle, Star, Heart, Target,
+  MapPin, HelpCircle, UserCircle, Star, Heart,
   CircleDot, Gem, Feather, Cpu, GlassWater, Cloud,
   BookOpen, Gamepad2, ShoppingBag, Trophy, Sun, Apple,
   ShoppingCart, Settings, Smartphone, Ticket, Store, Lock,

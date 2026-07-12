@@ -42,7 +42,7 @@ const MOCK_PROMPTS: Prompt[] = [
     rawPrompt: 'Raw generation data...', status: 'generated',
     objective: 'dashboard', niche: 'saas', style: 'cyberpunk', platform: 'cursor',
     language: 'pt', technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Supabase', 'PostgreSQL', 'Framer Motion'],
-    animations: ['scroll-reveal', 'cursor-trail', 'stagger-children', 'parallax'], structures: ['hero', 'features', 'team', 'pricing', 'contact', 'footer'],
+    animations: ['scroll-reveal', 'stagger-children', 'parallax'], structures: ['hero', 'features', 'team', 'pricing', 'contact', 'footer'],
     functionalities: ['auth', 'dashboard', 'search', 'filters', 'notifications', 'analytics', 'export'],
     font: 'Inter', colorScheme: 'Roxo Tech', favorites: true, version: 2,
     tokens: 3200, estimatedTime: 60, createdAt: '2025-06-22T08:00:00Z', updatedAt: '2025-06-24T16:00:00Z', tags: ['saas', 'dashboard', 'financeiro'],

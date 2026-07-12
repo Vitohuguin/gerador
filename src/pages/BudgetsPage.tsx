@@ -150,7 +150,7 @@ export default function BudgetsPage() {
         </motion.div>
       ))}
 
-      <BudgetGenerator onSave={(budget) => setBudgets((prev) => [budget, ...prev])} />
+      <BudgetGenerator onSave={(budget) => addBudget(budget)} />
     </motion.div>
   );
 }

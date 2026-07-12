@@ -237,6 +237,7 @@ export interface User {
   email: string;
   avatar: string;
   plan: PlanTier;
+  role?: string;
   createdAt: string;
   company: string;
   phone: string;
