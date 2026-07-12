@@ -121,10 +121,12 @@ async function authMiddleware(req, res, next) {
   }
 }
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
+
 function sanitizeUser(user) {
   if (!user) return null;
   const { password, ...rest } = user;
-  return rest;
+  return { ...rest, role: rest.email === ADMIN_EMAIL ? 'admin' : 'user' };
 }
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -579,8 +581,6 @@ app.delete('/api/auth/account', authMiddleware, async (req, res) => {
 });
 
 // ===================== ADMIN ROUTES =====================
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
 
 function requireAdmin(req, res, next) {
   if (!req.user) return res.status(401).json({ error: 'Autenticação necessária' });
