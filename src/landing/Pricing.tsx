@@ -36,7 +36,7 @@ export default function Pricing() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-8 max-w-3xl mx-auto px-0 md:px-4">
-          {PLANS.map((plan, i) => (
+          {PLANS.filter(plan => plan.id !== 'none').map((plan, i) => (
             <motion.div
               key={plan.id}
               custom={i}

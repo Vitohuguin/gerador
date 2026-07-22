@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { WizardState, NicheCategory, Objective, PromptStyle, Platform, Language, AnimationType, SiteStructure, Functionality } from '../types';
 
 interface WizardStore extends WizardState {
+  projectName: string;
   companyName: string;
   slogan: string;
   segment: string;
@@ -29,13 +30,14 @@ interface WizardStore extends WizardState {
   customNiche: string;
   briefingNotes: string;
   customObjective: string;
+  wowMode: boolean;
 
   setStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
   completeStep: (step: number) => void;
   updateWizard: (data: Partial<WizardState>) => void;
-  updateField: (field: string, value: string) => void;
+  updateField: (field: string, value: string | boolean | number) => void;
   toggleTechnology: (tech: string) => void;
   toggleAnimation: (anim: AnimationType) => void;
   toggleStructure: (struct: SiteStructure) => void;
@@ -44,6 +46,7 @@ interface WizardStore extends WizardState {
 }
 
 const initialState: WizardState & {
+  projectName: string;
   companyName: string; slogan: string; segment: string; city: string; state: string; country: string;
   neighborhood: string; address: string; businessDescription: string; marketTime: string;
   whatsapp: string; phone: string; email: string; currentSite: string; googleMaps: string;
@@ -51,18 +54,20 @@ const initialState: WizardState & {
   targetAudience: string; ageRange: string; socialClass: string; projectGoal: string;
   mainPains: string; mainDesires: string; customNiche: string; briefingNotes: string;
   customObjective: string;
+  wowMode: boolean;
 } = {
-  currentStep: 1, totalSteps: 15, completedSteps: [],
+  currentStep: 1, totalSteps: 1, completedSteps: [],
   objective: null, niche: null, style: null, platform: 'lovable', language: 'pt',
   technologies: [], animations: [], structures: [], functionalities: [],
   font: 'Inter', colorScheme: 'Personalizada', primaryColor: '#A855F7', secondaryColor: '#D946EF',
   targetAudience: '', referenceUrl: '', description: '', additionalContext: '',
+  projectName: '',
   companyName: '', slogan: '', segment: '', city: '', state: '', country: 'Brasil',
   neighborhood: '', address: '', businessDescription: '', marketTime: '',
   whatsapp: '', phone: '', email: '', currentSite: '', googleMaps: '',
   instagram: '', facebook: '',
   ageRange: '', socialClass: '', projectGoal: '', mainPains: '',
-  mainDesires: '', customNiche: '', briefingNotes: '', customObjective: '',
+  mainDesires: '', customNiche: '', briefingNotes: '', customObjective: '', wowMode: false,
 };
 
 export const useWizardStore = create<WizardStore>()(

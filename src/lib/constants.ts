@@ -7,6 +7,17 @@ import type {
 
 export const PLANS: Plan[] = [
   {
+    id: 'none', name: 'Gratuito', price: 0, currency: 'BRL', period: 'monthly',
+    features: [
+      'Acesso ao dashboard', 'Visualização de funcionalidades', 'Sem geração de prompts',
+      'Sem contratos', 'Sem propostas', 'Sem orçamentos', 'Sem briefings',
+      'Sem IA', 'Sem exportação',
+    ],
+    highlighted: false, color: '#6B7280', icon: 'Eye',
+    promptLimit: 0, contractLimit: 0, projectLimit: 0, teamMembers: 0,
+    analytics: false, prioritySupport: false,
+  },
+  {
     id: 'starter', name: 'Starter', price: 29.90, currency: 'BRL', period: 'monthly',
     features: [
       '100 prompts/mês', '20 contratos/mês', '20 nichos', 'Histórico completo',
@@ -37,20 +48,6 @@ export const PLANS: Plan[] = [
 
 export const WIZARD_STEPS: WizardStepConfig[] = [
   { id: 1, title: 'Nicho', description: 'Escolha o nicho do projeto', icon: 'Layers', component: 'NicheStep' },
-  { id: 2, title: 'Empresa', description: 'Dados da empresa', icon: 'Building2', component: 'CompanyStep' },
-  { id: 3, title: 'Objetivo', description: 'Tipo de projeto', icon: 'Target', component: 'ObjectiveStep' },
-  { id: 4, title: 'Público', description: 'Público-alvo', icon: 'Users', component: 'AudienceStep' },
-  { id: 5, title: 'Estilo', description: 'Estilo visual', icon: 'Palette', component: 'StyleStep' },
-  { id: 6, title: 'Cores', description: 'Paleta de cores', icon: 'Droplets', component: 'ColorsStep' },
-  { id: 7, title: 'Tipografia', description: 'Fontes do projeto', icon: 'TextCursorInput', component: 'FontStep' },
-  { id: 8, title: 'Animações', description: 'Efeitos e transições', icon: 'Sparkles', component: 'AnimationsStep' },
-  { id: 9, title: 'Estrutura', description: 'Seções do site', icon: 'Layout', component: 'StructureStep' },
-  { id: 10, title: 'Funcionalidades', description: 'Recursos do sistema', icon: 'Settings2', component: 'FeaturesStep' },
-  { id: 11, title: 'Tecnologias', description: 'Stack tecnológica', icon: 'Code2', component: 'TechStep' },
-  { id: 12, title: 'Plataforma', description: 'Ferramenta de destino', icon: 'Monitor', component: 'PlatformStep' },
-  { id: 13, title: 'Briefing', description: 'Detalhes adicionais', icon: 'FileText', component: 'BriefingStep' },
-  { id: 14, title: 'Revisão', description: 'Revise suas escolhas', icon: 'CheckCircle2', component: 'ReviewStep' },
-  { id: 15, title: 'Gerar', description: 'Gerar prompt completo', icon: 'Zap', component: 'GenerateStep' },
 ];
 
 export const NICHES: Niche[] = [
@@ -177,7 +174,7 @@ export const NICHES: Niche[] = [
 
 export const STYLES: StyleOption[] = [
   { id: 'minimalista', label: 'Minimalista', labelEn: 'Minimalist', icon: 'CircleDot', description: 'Limpo, espaçoso e focado no conteúdo', preview: 'minimal', category: 'estilo' },
-  { id: 'apple', label: 'Apple Style', labelEn: 'Apple Style', icon: 'Apple', description: 'Premium, minimalista com tipografia impecável', preview: 'apple', category: 'estilo', premium: true },
+  { id: 'apple', label: 'Estilo Apple', labelEn: 'Apple Style', icon: 'Apple', description: 'Premium, minimalista com tipografia impecável', preview: 'apple', category: 'estilo', premium: true },
   { id: 'premium', label: 'Premium', labelEn: 'Premium', icon: 'Gem', description: 'Design luxuoso com detalhes sofisticados', preview: 'premium', category: 'estilo', premium: true },
   { id: 'corporativo', label: 'Corporativo', labelEn: 'Corporate', icon: 'Briefcase', description: 'Visual profissional e sóbrio', preview: 'corporate', category: 'estilo' },
   { id: 'elegante', label: 'Elegante', labelEn: 'Elegant', icon: 'Feather', description: 'Refinado com tipografia clássica', preview: 'elegant', category: 'estilo', premium: true },
@@ -186,14 +183,14 @@ export const STYLES: StyleOption[] = [
   { id: 'cyberpunk', label: 'Cyberpunk', labelEn: 'Cyberpunk', icon: 'Cpu', description: 'Futurista com vibe cyberpunk', preview: 'cyberpunk', category: 'estilo', premium: true },
   { id: 'neon', label: 'Neon', labelEn: 'Neon', icon: 'Zap', description: 'Cores vibrantes e efeitos neon', preview: 'neon', category: 'estilo' },
   { id: 'glassmorphism', label: 'Glassmorphism', labelEn: 'Glassmorphism', icon: 'GlassWater', description: 'Efeito vidro com blur', preview: 'glass', category: 'estilo' },
-  { id: 'soft-ui', label: 'Soft UI', labelEn: 'Soft UI', icon: 'Cloud', description: 'Neumorphism leve e suave', preview: 'soft', category: 'estilo', premium: true },
+  { id: 'soft-ui', label: 'UI Suave', labelEn: 'Soft UI', icon: 'Cloud', description: 'Neumorphism leve e suave', preview: 'soft', category: 'estilo', premium: true },
   { id: 'editorial', label: 'Editorial', labelEn: 'Editorial', icon: 'BookOpen', description: 'Foco em tipografia e conteúdo', preview: 'editorial', category: 'estilo', premium: true },
-  { id: 'gaming', label: 'Gaming', labelEn: 'Gaming', icon: 'Gamepad2', description: 'Estilo gamer com cores vibrantes', preview: 'gaming', category: 'estilo' },
+  { id: 'gaming', label: 'Gamer', labelEn: 'Gaming', icon: 'Gamepad2', description: 'Estilo gamer com cores vibrantes', preview: 'gaming', category: 'estilo' },
   { id: 'ecommerce', label: 'E-commerce Premium', labelEn: 'E-commerce Premium', icon: 'ShoppingBag', description: 'Loja virtual com design premium', preview: 'ecommerce', category: 'estilo', premium: true },
   { id: 'saas', label: 'SaaS Moderno', labelEn: 'Modern SaaS', icon: 'Layout', description: 'Layout moderno para SaaS', preview: 'saas', category: 'estilo' },
-  { id: 'awwwards', label: 'Awwwards Style', labelEn: 'Awwwards Style', icon: 'Trophy', description: 'Design premiado e inovador', preview: 'awwwards', category: 'estilo', premium: true },
-  { id: 'light-mode', label: 'Light', labelEn: 'Light', icon: 'Sun', description: 'Tema claro e arejado', preview: 'light', category: 'tema' },
-  { id: 'dark-mode', label: 'Dark', labelEn: 'Dark', icon: 'Moon', description: 'Tema escuro elegante', preview: 'dark', category: 'tema' },
+  { id: 'awwwards', label: 'Estilo Awwwards', labelEn: 'Awwwards Style', icon: 'Trophy', description: 'Design premiado e inovador', preview: 'awwwards', category: 'estilo', premium: true },
+  { id: 'light-mode', label: 'Claro', labelEn: 'Light', icon: 'Sun', description: 'Tema claro e arejado', preview: 'light', category: 'tema' },
+  { id: 'dark-mode', label: 'Escuro', labelEn: 'Dark', icon: 'Moon', description: 'Tema escuro elegante', preview: 'dark', category: 'tema' },
   { id: 'auto-theme', label: 'Auto (sistema)', labelEn: 'Auto (system)', icon: 'Monitor', description: 'Acompanha preferências do sistema', preview: 'auto', category: 'tema' },
 ];
 

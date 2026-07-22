@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Crown, Rocket, Star, Building2, Check, X as XIcon,
+  Crown, Rocket, Star, Building2, Check, X as XIcon, Eye,
   CreditCard, Calendar, DollarSign,
   Download, FileText, History, AlertTriangle, Loader2, ExternalLink,
 } from 'lucide-react';
@@ -11,7 +11,7 @@ import { cn, formatCurrency, formatDate } from '@/lib/utils';
 import { plansAPI } from '@/services/api';
 
 const planIcons: Record<string, React.ElementType> = {
-  Rocket, Star, Building2,
+  Rocket, Star, Building2, Eye,
 };
 
 const containerVariants = {
