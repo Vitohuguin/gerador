@@ -31,7 +31,7 @@ export default function Pricing() {
             <span className="gradient-text">Premium</span>
           </h2>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm sm:text-base">
-            Escolha o plano ideal para você. Todos incluem 7 dias de teste grátis.
+            Escolha o plano ideal para você.
           </p>
         </motion.div>
 
@@ -92,7 +92,7 @@ export default function Pricing() {
                 onClick={() => navigate('/register')}
                 className={plan.highlighted ? 'btn-primary w-full py-3 text-sm font-semibold' : 'btn-glass w-full py-3 text-sm font-semibold'}
               >
-                Começar Teste Grátis
+                Assinar Agora
               </button>
             </motion.div>
           ))}

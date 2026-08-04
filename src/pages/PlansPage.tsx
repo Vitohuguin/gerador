@@ -179,7 +179,7 @@ export default function PlansPage() {
                 onClick={() => {
                   if (!isCurrent) handleUpgrade(plan.id);
                 }}
-                disabled={isCurrent || isLoading}
+                disabled={isCurrent || isLoading || plan.id === 'none'}
                 className={cn(
                   'w-full py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2',
                   isCurrent ? 'bg-purple-500/15 text-purple-400 border border-purple-500/20' :
@@ -193,7 +193,7 @@ export default function PlansPage() {
                 ) : isCurrent ? (
                   'Plano Atual'
                 ) : (
-                  <><ExternalLink size={14} /> {plan.price > 0 ? 'Assinar Agora' : 'Começar Grátis'}</>
+                  plan.id === 'none' ? 'Sem acesso' : <><ExternalLink size={14} /> Assinar Agora</>
                 )}
               </button>
             </div>

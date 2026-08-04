@@ -36,7 +36,6 @@ export default function CTA() {
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-zinc-400 max-w-xl mx-auto mb-6 sm:mb-8 px-4">
             Junte-se a milhares de profissionais que já transformaram seu workflow com a PromptForge AI.
-            Comece grátis por 7 dias.
           </p>
 
           <motion.div
@@ -54,7 +53,7 @@ export default function CTA() {
               <ArrowRight size={20} className="hidden sm:block transition-transform group-hover:translate-x-1" />
             </button>
             <p className="text-[11px] sm:text-xs text-zinc-600 mt-3 sm:mt-4">
-              Grátis por 7 dias. Sem compromisso. Cancele quando quiser.
+              Sem compromisso. Cancele quando quiser.
             </p>
           </motion.div>
         </motion.div>

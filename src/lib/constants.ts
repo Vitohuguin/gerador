@@ -7,7 +7,7 @@ import type {
 
 export const PLANS: Plan[] = [
   {
-    id: 'none', name: 'Gratuito', price: 0, currency: 'BRL', period: 'monthly',
+    id: 'none', name: 'Sem plano', price: 0, currency: 'BRL', period: 'monthly',
     features: [
       'Acesso ao dashboard', 'Visualização de funcionalidades', 'Sem geração de prompts',
       'Sem contratos', 'Sem propostas', 'Sem orçamentos', 'Sem briefings',
@@ -675,7 +675,7 @@ export const FAQ_ITEMS = [
   { question: 'Quais plataformas são suportadas?', answer: 'Atualmente suportamos Lovable, Bolt.new, v0, Cursor, Claude Code e Replit. A IA adapta automaticamente o prompt para cada plataforma.' },
   { question: 'Posso gerar prompts em outros idiomas?', answer: 'Sim! Oferecemos geração em Português, Inglês, Espanhol, Francês, Alemão e Italiano.' },
   { question: 'Os contratos gerados têm validade jurídica?', answer: 'Nossos contratos seguem modelos profissionais e incluem cláusulas comuns do mercado. Recomendamos sempre a revisão por um advogado antes da assinatura.' },
-  { question: 'Como funciona o plano gratuito?', answer: 'Oferecemos 7 dias de teste grátis no plano Pro, sem compromisso. Você pode cancelar quando quiser.' },
+  { question: 'Como funciona o plano gratuito?', answer: 'Não existe plano grátis com geração de prompts. Sem assinatura, o acesso é limitado ao dashboard — para gerar prompts, contratos e propostas é preciso assinar o Starter (R$ 29,90/mês) ou o Pro (R$ 47/mês).' },
   { question: 'Quais formas de pagamento são aceitas?', answer: 'Aceitamos PIX, Cartão de Crédito (todas as bandeiras), Boleto Bancário e Transferência Bancária.' },
   { question: 'Posso mudar de plano depois?', answer: 'Sim! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento. O valor é ajustado proporcionalmente.' },
   { question: 'Meus dados estão seguros?', answer: 'Sim. Utilizamos criptografia de ponta a ponta, autenticação segura, proteção contra SQL Injection, XSS e CSRF. Seguimos a LGPD.' },

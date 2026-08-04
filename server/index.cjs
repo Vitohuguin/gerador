@@ -334,7 +334,7 @@ async function ensureCaktoProducts() {
           interval: 1,
           recurrencePeriod: 30,
           quantityRecurrences: -1,
-          trialDays: 7,
+          trialDays: 0,
         });
         console.log(`✅ Oferta Cakto criada para: ${plan.name} (${offer.id})`);
         PLAN_OFFER_IDS[plan.id] = offer.id;
