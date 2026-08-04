@@ -6,6 +6,8 @@ import {
   ChevronDown, ArrowUpDown,
 } from 'lucide-react';
 import { usePromptStore } from '@/store/promptStore';
+import { useAuthStore } from '@/store/authStore';
+import { UpgradeBlock } from '@/components/UpgradeBlock';
 import { NICHES, PLATFORMS } from '@/lib/constants';
 import { cn, formatDate, timeAgo } from '@/lib/utils';
 import type { NicheCategory, Platform } from '@/types';
@@ -41,6 +43,12 @@ export default function FavoritesPage() {
     if (platformFilter !== 'all') result = result.filter((p) => p.platform === platformFilter);
     return result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [prompts, search, nicheFilter, platformFilter]);
+
+  const user = useAuthStore(s => s.user);
+
+  if (user?.plan === 'none') {
+    return <UpgradeBlock message="Assine um plano para acessar seus prompts favoritos." />;
+  }
 
   if (favorites.length === 0 && prompts.filter((p) => p.favorites).length === 0) {
     return (

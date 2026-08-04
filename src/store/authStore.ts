@@ -21,6 +21,7 @@ interface AuthState {
   logout: () => void;
   resetPassword: (email: string) => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
+  refreshUser: () => Promise<User | null>;
   clearError: () => void;
   clearConfirmation: () => void;
 }
@@ -102,6 +103,16 @@ export const useAuthStore = create<AuthState>()(
           set({ user: res.user, isLoading: false, error: null });
         } catch (err: any) {
           set({ isLoading: false, error: err.message || 'Erro ao atualizar perfil' });
+        }
+      },
+
+      refreshUser: async () => {
+        try {
+          const res = await authAPI.me();
+          set({ user: res.user, isAuthenticated: true, error: null });
+          return res.user;
+        } catch {
+          return null;
         }
       },
 

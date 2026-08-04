@@ -31,6 +31,11 @@ interface WizardStore extends WizardState {
   briefingNotes: string;
   customObjective: string;
   wowMode: boolean;
+  cta: string;
+  visualEffects: string[];
+  palette: string;
+  aiMode: string;
+  mapsUrl: string;
 
   setStep: (step: number) => void;
   nextStep: () => void;
@@ -38,10 +43,10 @@ interface WizardStore extends WizardState {
   completeStep: (step: number) => void;
   updateWizard: (data: Partial<WizardState>) => void;
   updateField: (field: string, value: string | boolean | number) => void;
-  toggleTechnology: (tech: string) => void;
   toggleAnimation: (anim: AnimationType) => void;
   toggleStructure: (struct: SiteStructure) => void;
   toggleFunctionality: (func: Functionality) => void;
+  toggleVisualEffect: (id: string) => void;
   resetWizard: () => void;
 }
 
@@ -55,11 +60,15 @@ const initialState: WizardState & {
   mainPains: string; mainDesires: string; customNiche: string; briefingNotes: string;
   customObjective: string;
   wowMode: boolean;
+  cta: string;
+  visualEffects: string[];
+  palette: string;
+  aiMode: string;
 } = {
   currentStep: 1, totalSteps: 1, completedSteps: [],
   objective: null, niche: null, style: null, platform: 'lovable', language: 'pt',
-  technologies: [], animations: [], structures: [], functionalities: [],
-  font: 'Inter', colorScheme: 'Personalizada', primaryColor: '#A855F7', secondaryColor: '#D946EF',
+  animations: [], structures: [], functionalities: [],
+  font: 'Inter', colorScheme: 'Personalizada', primaryColor: '#8B5CF6', secondaryColor: '#A78BFA',
   targetAudience: '', referenceUrl: '', description: '', additionalContext: '',
   projectName: '',
   companyName: '', slogan: '', segment: '', city: '', state: '', country: 'Brasil',
@@ -67,7 +76,8 @@ const initialState: WizardState & {
   whatsapp: '', phone: '', email: '', currentSite: '', googleMaps: '',
   instagram: '', facebook: '',
   ageRange: '', socialClass: '', projectGoal: '', mainPains: '',
-  mainDesires: '', customNiche: '', briefingNotes: '', customObjective: '', wowMode: false,
+  mainDesires: '', customNiche: '', briefingNotes: '', customObjective: '', wowMode: false, cta: '',
+  visualEffects: [], palette: 'preto-dourado', aiMode: 'visual-premium', mapsUrl: '',
 };
 
 export const useWizardStore = create<WizardStore>()(
@@ -102,15 +112,6 @@ export const useWizardStore = create<WizardStore>()(
 
       updateField: (field, value) => set({ [field]: value } as Partial<WizardStore>),
 
-      toggleTechnology: (tech) => {
-        const { technologies } = get();
-        set({
-          technologies: technologies.includes(tech)
-            ? technologies.filter(t => t !== tech)
-            : [...technologies, tech],
-        });
-      },
-
       toggleAnimation: (anim) => {
         const { animations } = get();
         set({
@@ -138,6 +139,15 @@ export const useWizardStore = create<WizardStore>()(
         });
       },
 
+      toggleVisualEffect: (id) => {
+        const { visualEffects } = get();
+        set({
+          visualEffects: visualEffects.includes(id)
+            ? visualEffects.filter(v => v !== id)
+            : [...visualEffects, id],
+        });
+      },
+
       resetWizard: () => {
         set(initialState);
         localStorage.removeItem('promptforge-wizard');
@@ -147,7 +157,7 @@ export const useWizardStore = create<WizardStore>()(
       name: 'promptforge-wizard',
       partialize: (state) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { setStep, nextStep, prevStep, completeStep, updateWizard, updateField, toggleTechnology, toggleAnimation, toggleStructure, toggleFunctionality, resetWizard, ...data } = state;
+        const { setStep, nextStep, prevStep, completeStep, updateWizard, updateField, toggleAnimation, toggleStructure, toggleFunctionality, toggleVisualEffect, resetWizard, ...data } = state;
         return data;
       },
     },

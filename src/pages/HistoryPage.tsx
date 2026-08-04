@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { usePromptStore } from '@/store/promptStore';
 import { useAuthStore } from '@/store/authStore';
+import { UpgradeBlock } from '@/components/UpgradeBlock';
 import { NICHES, PLATFORMS, LANGUAGES } from '@/lib/constants';
 import { cn, formatDate, timeAgo } from '@/lib/utils';
 import type { NicheCategory, Platform, Language } from '@/types';
@@ -128,6 +129,12 @@ export default function HistoryPage() {
       return acc;
     }, {})
   );
+
+  const user = useAuthStore(s => s.user);
+
+  if (user?.plan === 'none') {
+    return <UpgradeBlock message="Assine um plano para acessar o histórico de prompts." />;
+  }
 
   if (prompts.length === 0) {
     return (

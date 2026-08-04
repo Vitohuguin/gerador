@@ -91,19 +91,25 @@ async function authMiddleware(req, res, next) {
   try {
     let authUserId = null;
 
+    // 1º: token local HS256 (emitido pelo login/register deste app) — validação local rápida
     try {
-      const { data: { user: au }, error } = await supabaseAdmin.auth.getUser(token);
-      if (!error && au) authUserId = au.id;
+      const decoded = jwt.verify(token, SUPABASE_JWT_SECRET);
+      if (decoded && decoded.sub) authUserId = decoded.sub;
     } catch (e) {
-      console.warn('⚠️ Auth: getUser falhou:', e.message);
+      // não é o token local — pode ser access_token ES256 do Supabase (reset de senha etc)
     }
 
+    // 2º fallback: token ES256 do Supabase (session access_token)
     if (!authUserId) {
       try {
-        const decoded = jwt.verify(token, SUPABASE_JWT_SECRET);
-        if (decoded && decoded.sub) authUserId = decoded.sub;
+        const { data: { user: au }, error } = await supabaseAdmin.auth.getUser(token);
+        if (!error && au) {
+          authUserId = au.id;
+        } else if (error) {
+          console.warn('⚠️ Auth: getUser falhou:', error.message);
+        }
       } catch (e) {
-        console.warn('⚠️ Auth: JWT verify falhou:', e.message);
+        console.warn('⚠️ Auth: getUser exceção:', e.message);
       }
     }
 
@@ -261,7 +267,13 @@ app.post('/api/auth/login', rateLimit({ windowMs: 60000, max: 10, message: 'Muit
       });
     }
 
-    const token = data.session.access_token;
+    // Token local HS256 (mesmo padrão do register) — o access_token do Supabase é ES256
+    // e não passa na verificação jwt.verify HS256 do authMiddleware. Dura 7 dias.
+    const token = jwt.sign(
+      { sub: data.user.id, email: email.toLowerCase() },
+      SUPABASE_JWT_SECRET,
+      { expiresIn: '7d' }
+    );
     setAuthCookie(res, token);
     res.json({ token, user: sanitizeUser(user) });
   } catch (err) {
@@ -401,14 +413,21 @@ app.post('/api/subscription/cancel', authMiddleware, async (req, res) => {
 
 function verifyWebhookSignature(req, res, next) {
   const secret = process.env.CAKTO_WEBHOOK_SECRET;
-  if (!secret) return next();
+  if (!secret) {
+    // Fail-closed: sem segredo configurado, NUNCA aceitar webhook (evita upgrade grátis forjado)
+    console.error('⛔ Webhook Cakto: CAKTO_WEBHOOK_SECRET não configurado — rejeitando.');
+    return res.status(503).json({ error: 'Webhook não configurado' });
+  }
   const signature = req.headers['x-webhook-signature'];
   if (!signature) {
     return res.status(401).json({ error: 'Assinatura do webhook ausente' });
   }
   const raw = JSON.stringify(req.body);
   const expected = crypto.createHmac('sha256', secret).update(raw).digest('hex');
-  if (signature !== expected) {
+  const a = Buffer.from(String(signature), 'utf8');
+  const b = Buffer.from(expected, 'utf8');
+  const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+  if (!ok) {
     console.warn('⚠️ Assinatura do webhook inválida');
     return res.status(401).json({ error: 'Assinatura do webhook inválida' });
   }
@@ -515,8 +534,9 @@ app.post('/api/webhooks/cakto', verifyWebhookSignature, async (req, res) => {
 
     res.json({ received: true });
   } catch (err) {
-    console.error('Webhook error:', err);
-    res.status(200).json({ received: true });
+    // 500 → o Cakto reenvia o webhook (retry). 200 aqui faria o pagamento ser perdido silenciosamente.
+    console.error('Webhook error (respondendo 500 p/ retry):', err);
+    res.status(500).json({ error: 'Erro interno ao processar webhook' });
   }
 });
 
@@ -625,6 +645,35 @@ app.put('/api/admin/users/:id/plan', authMiddleware, requireAdmin, async (req, r
   } catch (err) {
     console.error('Admin update plan error:', err);
     res.status(500).json({ error: 'Erro ao atualizar plano' });
+  }
+});
+
+// Apagar qualquer conta (exceto a do próprio admin)
+app.delete('/api/admin/users/:id', authMiddleware, requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (id === req.user.id) {
+      return res.status(400).json({ error: 'Você não pode apagar a própria conta de administrador' });
+    }
+
+    const user = await users.findById(id);
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+
+    // 1. Remove da tabela users + dados relacionados (subscriptions, payments, usage)
+    await users.remove(id);
+
+    // 2. Remove do Supabase Auth (para o email poder ser recadastrado e login parar de funcionar)
+    try {
+      await supabaseAdmin.auth.admin.deleteUser(id);
+    } catch (authErr) {
+      console.warn('⚠️ Erro ao remover auth do Supabase (ignorado):', authErr.message);
+    }
+
+    console.log(`🗑️ Admin apagou a conta: ${user.email} (${id})`);
+    res.json({ ok: true, deleted: { id: user.id, email: user.email } });
+  } catch (err) {
+    console.error('Admin delete user error:', err);
+    res.status(500).json({ error: 'Erro ao apagar usuário' });
   }
 });
 
@@ -1249,6 +1298,22 @@ REGRAS:
   res.json({ content: result.content });
 });
 
+// ── Geração local (wizard): registra uso sem rodar IA ──
+// O wizard gera o prompt 100% no navegador; esta rota aplica o limite
+// do plano e alimenta o contador do dashboard (mesmo campo do generate-prompt).
+app.post('/api/generation-track', authMiddleware, requirePlan, rateLimit({ windowMs: 60000, max: 30, message: 'Muitas gerações. Aguarde um momento.' }), checkLimit, async (req, res) => {
+  try {
+    await usage.increment(req.user.id, 'promptsThisMonth');
+    const limits = PLAN_LIMITS[req.user.plan] || PLAN_LIMITS.starter;
+    const count = await usage.getCount(req.user.id, 'promptsThisMonth');
+    res.json({ ok: true, used: count, limit: limits.prompts });
+  } catch (err) {
+    // Nunca bloquear a geração local por falha de tracking — só loga
+    console.warn('⚠️ generation-track falhou:', err.message);
+    res.json({ ok: true });
+  }
+});
+
 const rateLimitStore = new Map();
 
 function rateLimit({ windowMs = 60000, max = 10, message = 'Muitas requisições. Tente novamente em breve.' } = {}) {
@@ -1305,8 +1370,8 @@ async function checkLimit(req, res, next) {
   const plan = req.user.plan || 'starter';
   const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.starter;
   try {
-    if (req.path === '/api/generate-prompt' || req.path === '/api/generate-contract') {
-      const field = req.path === '/api/generate-prompt' ? 'promptsThisMonth' : 'contractsThisMonth';
+    if (req.path === '/api/generate-prompt' || req.path === '/api/generate-contract' || req.path === '/api/generation-track') {
+      const field = req.path === '/api/generate-contract' ? 'contractsThisMonth' : 'promptsThisMonth';
       const limit = field === 'promptsThisMonth' ? limits.prompts : limits.contracts;
       if (limit === Infinity) return next();
       const count = await usage.getCount(req.user.id, field);

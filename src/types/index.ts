@@ -68,6 +68,14 @@ export type PromptStyle =
   | 'ecommerce'
   | 'saas'
   | 'awwwards'
+  | 'cinematic'
+  | 'magazine'
+  | 'poster'
+  | 'brutalist'
+  | 'swiss-design'
+  | 'luxury-editorial'
+  | 'bento-premium'
+  | 'storytelling'
   | 'dark-mode'
   | 'light-mode'
   | 'auto-theme';
@@ -104,9 +112,20 @@ export type AnimationType =
   | 'floating-elements'
   | 'blob-animation'
   | 'background-particles'
-  | 'mesh-gradient';
-
-export type TechnologyCategory = 'auto' | 'frontend' | 'estilo' | 'ui' | 'animacoes' | 'backend' | 'database' | 'hosting';
+  | 'mesh-gradient'
+  | 'hero-animation'
+  | 'glass-hover'
+  | 'card-lift'
+  | 'cta-pulse'
+  | 'faq-animation'
+  | 'gallery-hover'
+  | 'loading-animation'
+  | 'mouse-trail'
+  | 'sticky-scroll'
+  | 'bento-animation'
+  | 'morphing-cards'
+  | 'svg-draw'
+  | 'timeline-animation';
 
 export type SiteStructure =
   | 'navbar-hero'
@@ -424,7 +443,6 @@ export interface WizardState {
   style: PromptStyle | null;
   platform: Platform | null;
   language: Language;
-  technologies: string[];
   animations: AnimationType[];
   structures: SiteStructure[];
   functionalities: Functionality[];
@@ -436,6 +454,7 @@ export interface WizardState {
   referenceUrl: string;
   description: string;
   additionalContext: string;
+  mapsUrl: string;
 }
 
 export interface WizardStepConfig {
@@ -491,14 +510,6 @@ export interface AnimationOption {
   description: string;
   category: string;
   premium?: boolean;
-}
-
-export interface TechnologyOption {
-  id: string;
-  label: string;
-  category: TechnologyCategory;
-  icon: string;
-  popular: boolean;
 }
 
 export interface FontOption {
@@ -561,7 +572,8 @@ export interface NavItem {
   label: string;
   icon: string;
   path: string;
-  badge?: number;
+  badge?: number | string;
+  highlight?: boolean;
   children?: NavItem[];
 }
 

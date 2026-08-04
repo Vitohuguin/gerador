@@ -37,7 +37,7 @@ export default function AuroraBackground({ className = '' }: AuroraBackgroundPro
         transition={{ duration: 20, repeat: Infinity, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="absolute -top-1/4 -left-1/4 w-[120%] h-[120%] opacity-60"
         style={{
-          background: 'radial-gradient(ellipse 60% 50% at 30% 40%, rgba(168,85,247,0.25), transparent 60%)',
+          background: 'radial-gradient(ellipse 60% 50% at 30% 40%, rgba(139,92,246,0.30), transparent 60%)',
         }}
       />
       <motion.div
@@ -48,7 +48,7 @@ export default function AuroraBackground({ className = '' }: AuroraBackgroundPro
         transition={{ duration: 25, repeat: Infinity, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="absolute -top-1/4 -right-1/4 w-[120%] h-[120%] opacity-50"
         style={{
-          background: 'radial-gradient(ellipse 50% 60% at 70% 30%, rgba(217,70,239,0.2), transparent 60%)',
+          background: 'radial-gradient(ellipse 50% 60% at 70% 30%, rgba(167,139,250,0.25), transparent 60%)',
         }}
       />
       <motion.div
@@ -59,7 +59,7 @@ export default function AuroraBackground({ className = '' }: AuroraBackgroundPro
         transition={{ duration: 30, repeat: Infinity, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="absolute -bottom-1/4 left-1/4 w-[100%] h-[100%] opacity-40"
         style={{
-          background: 'radial-gradient(ellipse 50% 50% at 50% 80%, rgba(124,58,237,0.2), transparent 60%)',
+          background: 'radial-gradient(ellipse 50% 50% at 50% 80%, rgba(109,40,217,0.25), transparent 60%)',
         }}
       />
       <motion.div
@@ -70,7 +70,7 @@ export default function AuroraBackground({ className = '' }: AuroraBackgroundPro
         transition={{ duration: 35, repeat: Infinity, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="absolute top-1/3 -left-1/4 w-[80%] h-[80%] opacity-30"
         style={{
-          background: 'radial-gradient(ellipse 40% 50% at 40% 50%, rgba(236,72,153,0.15), transparent 60%)',
+          background: 'radial-gradient(ellipse 40% 50% at 40% 50%, rgba(124,58,237,0.20), transparent 60%)',
         }}
       />
       <motion.div
@@ -81,7 +81,7 @@ export default function AuroraBackground({ className = '' }: AuroraBackgroundPro
         transition={{ duration: 22, repeat: Infinity, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="absolute top-1/2 -right-1/4 w-[70%] h-[70%] opacity-25"
         style={{
-          background: 'radial-gradient(ellipse 50% 40% at 60% 50%, rgba(168,85,247,0.2), transparent 60%)',
+          background: 'radial-gradient(ellipse 50% 40% at 60% 50%, rgba(139,92,246,0.25), transparent 60%)',
         }}
       />
     </div>

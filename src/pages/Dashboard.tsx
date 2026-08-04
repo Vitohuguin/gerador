@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Sparkles, FileSignature, FileText,
   FolderKanban, Plus, Clock, ArrowRight, TrendingUp,
   DollarSign, Users, Activity, BarChart3, PenLine,
-  FileCheck, Handshake, Zap,
+  FileCheck, Handshake, Zap, Rocket,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { usePromptStore } from '@/store/promptStore';
@@ -72,10 +72,59 @@ export default function Dashboard() {
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
       <motion.div variants={itemVariants}>
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
-          {'Bem-vindo'}, <span className="gradient-text">{user?.name?.split(' ')[0] || 'Usuario'}</span>
+          {'Bem-vindo'}, <span className="gradient-text">{user?.name?.split(' ')[0] || 'Usuário'}</span>
         </h1>
-        <p className="text-sm sm:text-base text-zinc-400 mt-1">{'Visao geral da sua plataforma de criacao de prompts'}</p>
+        <p className="text-sm sm:text-base text-zinc-400 mt-1">{'Visão geral da sua plataforma de criação de prompts'}</p>
       </motion.div>
+
+      {/* ── Onboarding CTA (primeiro acesso) ── */}
+      {recentProjects.length === 0 && recentPrompts.length === 0 && (
+        <motion.div
+          variants={itemVariants}
+          className="relative overflow-hidden rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-600/20 via-fuchsia-600/10 to-pink-600/20 p-6 sm:p-8"
+        >
+          <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-purple-500/20 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-pink-500/20 blur-3xl" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center gap-5">
+            <div className="flex-1">
+              <h2 className="text-lg sm:text-xl font-bold text-white mb-2 flex items-center gap-2">
+                <Rocket size={20} className="text-pink-400" />
+                {'Gere seu primeiro prompt profissional'}
+              </h2>
+              <p className="text-sm text-zinc-400 leading-relaxed max-w-md">
+                {'Em menos de 5 minutos você monta um briefing completo para criar sites incríveis no Lovable, Bolt e outras plataformas.'}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <button
+                  onClick={() => navigate('/dashboard/wizard')}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-500 hover:to-pink-500 shadow-lg shadow-purple-500/20 transition-all"
+                >
+                  <Zap size={16} />
+                  {'Começar agora'}
+                  <ArrowRight size={14} />
+                </button>
+                <button
+                  onClick={() => navigate('/dashboard/wizard')}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-zinc-300 hover:text-white border border-white/10 hover:border-white/20 transition-all"
+                >
+                  {'Ver um exemplo'}
+                </button>
+              </div>
+            </div>
+            <div className="hidden sm:flex items-center gap-3 shrink-0">
+              {['Nicho', 'Design', 'Funcionalidades', 'Briefing'].map((step, i) => (
+                <div key={step} className="flex flex-col items-center gap-1.5">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold ${i < 2 ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white' : 'bg-white/10 text-zinc-400 border border-white/10'}`}>
+                    {i + 1}
+                  </div>
+                  <span className="text-[10px] text-zinc-500">{step}</span>
+                </div>
+              ))}
+              <ArrowRight size={16} className="text-zinc-600" />
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {statCards.map((stat) => {

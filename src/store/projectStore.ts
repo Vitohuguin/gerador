@@ -25,7 +25,7 @@ const MOCK_PROJECTS: Project[] = [
   {
     id: 'proj_003', userId: 'usr_demo_001', name: 'TechFlow SaaS', description: 'Painel administrativo para startup de gestão',
     status: 'draft', niche: 'saas', platform: 'cursor', promptCount: 7, contractCount: 2,
-    createdAt: '2025-06-10T08:00:00Z', updatedAt: '2025-06-20T12:00:00Z', color: '#A855F7', tags: ['saas', 'dashboard', 'react'],
+    createdAt: '2025-06-10T08:00:00Z', updatedAt: '2025-06-20T12:00:00Z', color: '#8B5CF6', tags: ['saas', 'dashboard', 'react'],
   },
 ];
 
@@ -41,7 +41,7 @@ export const useProjectStore = create<ProjectStore>()(
       niche: data.niche || 'tech', platform: data.platform || 'lovable',
       promptCount: data.promptCount || 0, contractCount: data.contractCount || 0,
       createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      color: data.color || '#A855F7', tags: data.tags || [],
+      color: data.color || '#8B5CF6', tags: data.tags || [],
     };
     set((s) => ({ projects: [project, ...s.projects] }));
     return project;

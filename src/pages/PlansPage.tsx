@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import {
   Crown, Rocket, Star, Building2, Check, X as XIcon, Eye,
   CreditCard, Calendar, DollarSign,
@@ -24,13 +25,49 @@ const itemVariants = {
 };
 
 export default function PlansPage() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, refreshUser } = useAuthStore();
   const currentPlan = user?.plan || 'none';
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
   const [subscription, setSubscription] = useState<any | null>(null);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [checkingPayment, setCheckingPayment] = useState(false);
+
+  // Ao voltar do checkout (foco na janela), revalida o plano no backend
+  useEffect(() => {
+    const onFocus = () => {
+      refreshUser();
+      plansAPI.subscription()
+        .then((res) => {
+          setPaymentHistory(res.history || []);
+          setSubscription(res.subscription);
+        })
+        .catch(() => {});
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [refreshUser]);
+
+  async function handleCheckPayment() {
+    setCheckingPayment(true);
+    setError(null);
+    try {
+      const u = await refreshUser();
+      const res = await plansAPI.subscription();
+      setPaymentHistory(res.history || []);
+      setSubscription(res.subscription);
+      if (u && u.plan !== 'none' && u.plan !== currentPlan) {
+        toast.success(`✅ Plano ${u.plan === 'pro' ? 'Pro' : 'Starter'} ativado com sucesso!`);
+      } else if (u && (u.plan === 'none' || u.plan === currentPlan)) {
+        toast.info('Pagamento ainda não confirmado. Assim que o Cakto confirmar, o plano é liberado automaticamente.');
+      }
+    } catch {
+      setError('Não foi possível verificar. Tente novamente em instantes.');
+    } finally {
+      setCheckingPayment(false);
+    }
+  }
 
   useEffect(() => {
     plansAPI.subscription()
@@ -48,6 +85,7 @@ export default function PlansPage() {
       const res = await plansAPI.checkout(planId);
       if (res.checkoutUrl) {
         window.open(res.checkoutUrl, '_blank');
+        toast.info('Pagamento aberto em nova aba. Após pagar, volte aqui e clique em "Já paguei" para liberar seu plano na hora.');
       }
     } catch (err: any) {
       setError(err.message);
@@ -80,6 +118,18 @@ export default function PlansPage() {
       {error && (
         <motion.div variants={itemVariants} className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
           {error}
+        </motion.div>
+      )}
+
+      {user?.email && (
+        <motion.div variants={itemVariants} className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm">
+          <p className="font-semibold mb-1 flex items-center gap-2">
+            <AlertTriangle size={15} className="shrink-0" />
+            Pague com o email da sua conta
+          </p>
+          <p className="text-amber-200/80 text-xs">
+            Seu login é <strong className="text-amber-300">{user.email}</strong>. Use EXATAMENTE esse email no pagamento do Cakto — se pagar com outro email, o plano vai para uma conta diferente e a sua fica sem acesso.
+          </p>
         </motion.div>
       )}
 
@@ -149,6 +199,24 @@ export default function PlansPage() {
             </div>
           );
         })}
+      </motion.div>
+
+      <motion.div variants={itemVariants} className="glass-card p-5 flex flex-col sm:flex-row items-center justify-between gap-3 border-emerald-500/20">
+        <div className="flex items-center gap-3">
+          <AlertTriangle size={18} className="text-emerald-400 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-white">Já fez o pagamento?</p>
+            <p className="text-xs text-zinc-400">Seu plano é liberado automaticamente quando o Cakto confirmar. Clique aqui para verificar agora.</p>
+          </div>
+        </div>
+        <button
+          onClick={handleCheckPayment}
+          disabled={checkingPayment}
+          className="btn-primary inline-flex items-center gap-2 px-4 py-2 text-xs shrink-0"
+        >
+          {checkingPayment ? <Loader2 size={14} className="animate-spin" /> : <ExternalLink size={14} />}
+          {checkingPayment ? 'Verificando...' : 'Já paguei — Verificar plano'}
+        </button>
       </motion.div>
 
       <motion.div variants={itemVariants} className="glass-card p-6">

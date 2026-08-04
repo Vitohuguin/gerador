@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #050505;
-  --color-bg-secondary: #0D0D0D;
-  --color-bg-card: #121212;
-  --color-primary: #A855F7;
-  --color-primary-hover: #9333EA;
-  --color-secondary: #7C3AED;
-  --color-glow: #D946EF;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #A1A1AA;
-  --color-border: rgba(168, 85, 247, 0.2);
-  --color-glass: rgba(18, 18, 18, 0.7);
-  --color-glass-border: rgba(168, 85, 247, 0.15);
-  --color-glass-hover: rgba(18, 18, 18, 0.9);
+  --color-bg-primary: #0B0A18;
+  --color-bg-secondary: #121024;
+  --color-bg-card: #181530;
+  --color-primary: #8B5CF6;
+  --color-primary-hover: #7C3AED;
+  --color-secondary: #6D28D9;
+  --color-glow: #A78BFA;
+  --color-text-primary: #EDEAF9;
+  --color-text-secondary: #A5A0C8;
+  --color-border: rgba(139, 92, 246, 0.25);
+  --color-glass: rgba(18, 16, 36, 0.7);
+  --color-glass-border: rgba(139, 92, 246, 0.18);
+  --color-glass-hover: rgba(18, 16, 36, 0.9);
   --font-sans: 'Inter', 'Manrope', system-ui, sans-serif;
 
   --animate-float: float 6s ease-in-out infinite;
@@ -49,15 +49,15 @@
 }
 
 .dark {
-  --color-bg-primary: #050505;
-  --color-bg-secondary: #0D0D0D;
-  --color-bg-card: #121212;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #A1A1AA;
-  --color-glass: rgba(18, 18, 18, 0.7);
-  --color-glass-hover: rgba(18, 18, 18, 0.9);
-  --color-glass-border: rgba(168, 85, 247, 0.15);
-  --color-border: rgba(168, 85, 247, 0.2);
+  --color-bg-primary: #0B0A18;
+  --color-bg-secondary: #121024;
+  --color-bg-card: #181530;
+  --color-text-primary: #EDEAF9;
+  --color-text-secondary: #A5A0C8;
+  --color-glass: rgba(18, 16, 36, 0.7);
+  --color-glass-hover: rgba(18, 16, 36, 0.9);
+  --color-glass-border: rgba(139, 92, 246, 0.18);
+  --color-border: rgba(139, 92, 246, 0.25);
 }
 
 @keyframes float {
@@ -159,16 +159,16 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(168, 85, 247, 0.3);
+    background: rgba(139, 92, 246, 0.35);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(168, 85, 247, 0.5);
+    background: rgba(139, 92, 246, 0.55);
   }
 
   ::selection {
-    background: rgba(168, 85, 247, 0.3);
+    background: rgba(139, 92, 246, 0.35);
     color: white;
   }
 }
@@ -194,22 +194,22 @@
   @media (hover: hover) {
     .glass-card:hover {
       background: var(--color-glass-hover);
-      border-color: rgba(168, 85, 247, 0.3);
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.1), 0 8px 32px rgba(0, 0, 0, 0.4);
+      border-color: rgba(139, 92, 246, 0.35);
+      box-shadow: 0 0 35px rgba(139, 92, 246, 0.12), 0 8px 32px rgba(0, 0, 0, 0.4);
       transform: translateY(-2px);
     }
   }
 
   .glow {
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.35), 0 0 60px rgba(139, 92, 246, 0.15);
   }
 
   .glow-text {
-    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(109, 40, 217, 0.3);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #A855F7, #D946EF, #7C3AED);
+    background: linear-gradient(135deg, #8B5CF6, #A78BFA, #7C3AED);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -218,11 +218,11 @@
   .gradient-border {
     border: 1px solid transparent;
     background: linear-gradient(var(--color-bg-primary), var(--color-bg-primary)) padding-box,
-                linear-gradient(135deg, #A855F7, #D946EF, #7C3AED) border-box;
+                linear-gradient(135deg, #8B5CF6, #A78BFA, #7C3AED) border-box;
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, #A855F7, #7C3AED);
+    background: linear-gradient(135deg, #8B5CF6, #6D28D9);
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 12px;
@@ -234,7 +234,7 @@
 
   @media (hover: hover) {
     .btn-primary:hover {
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.45);
       transform: translateY(-1px);
     }
   }
@@ -269,17 +269,17 @@
   @media (hover: hover) {
     .btn-glass:hover {
       background: var(--color-glass-hover);
-      border-color: rgba(168, 85, 247, 0.4);
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+      border-color: rgba(139, 92, 246, 0.45);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
       transform: translateY(-1px);
     }
   }
 
   .input-glass {
-    background: rgba(18, 18, 18, 0.5);
+    background: rgba(18, 16, 36, 0.5);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.2);
     color: white;
     padding: 0.75rem 1rem;
     border-radius: 12px;
@@ -289,8 +289,8 @@
   }
 
   .input-glass:focus {
-    border-color: rgba(168, 85, 247, 0.5);
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+    border-color: rgba(139, 92, 246, 0.55);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
   }
 
   .input-glass::placeholder {
@@ -319,15 +319,16 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 80% 80% at 50% -20%, rgba(168, 85, 247, 0.15), transparent),
-      radial-gradient(ellipse 80% 80% at 80% 50%, rgba(217, 70, 239, 0.08), transparent),
-      radial-gradient(ellipse 80% 80% at 20% 80%, rgba(124, 58, 237, 0.1), transparent);
+      radial-gradient(ellipse 70% 60% at 50% 20%, rgba(139, 92, 246, 0.28), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 80% 60%, rgba(167, 139, 250, 0.14), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 15% 75%, rgba(109, 40, 217, 0.18), transparent 60%),
+      radial-gradient(ellipse 90% 70% at 50% 100%, rgba(124, 58, 237, 0.12), transparent 70%);
   }
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
     background-size: 60px 60px;
   }
 }

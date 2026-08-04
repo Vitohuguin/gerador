@@ -20,7 +20,7 @@ export default function LoadingScreen({ isLoading }: LoadingScreenProps) {
               transition={{ duration: 1.5, repeat: Infinity, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
               className="w-16 h-16 rounded-full"
               style={{
-                background: 'conic-gradient(from 0deg, #A855F7, #D946EF, #7C3AED, #A855F7)',
+                background: 'conic-gradient(from 0deg, #8B5CF6, #A78BFA, #6D28D9, #8B5CF6)',
                 padding: 3,
               }}
             >

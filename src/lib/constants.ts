@@ -2,7 +2,7 @@ import type {
   Niche, StyleOption, PlatformOption, LanguageOption, AnimationOption,
   FontOption, StructureOption, FunctionalityOption, ObjectiveOption,
   ContractTypeOption, ClauseOption, PaymentMethodOption, Plan, NavItem,
-  WizardStepConfig, TechnologyOption
+  WizardStepConfig
 } from '../types';
 
 export const PLANS: Plan[] = [
@@ -80,6 +80,7 @@ export const NICHES: Niche[] = [
   { id: 'education', label: 'Curso Online', labelEn: 'Online Course', icon: 'Video', emoji: '🎓', description: 'Cursos e plataformas EAD', color: '#D946EF', premium: true },
   { id: 'automotive', label: 'Oficina Mecânica', labelEn: 'Auto Repair', icon: 'Wrench', emoji: '🔧', description: 'Oficinas e reparos', color: '#6B7280', premium: true },
   { id: 'automotive', label: 'Auto Center', labelEn: 'Auto Center', icon: 'Car', emoji: '🚗', description: 'Centros automotivos', color: '#1F2937', premium: true },
+  { id: 'automotive', label: 'Lava Jato', labelEn: 'Car Wash', icon: 'Droplets', emoji: '🚿', description: 'Lava jatos e estética automotiva', color: '#0284C7', premium: true },
   { id: 'automotive', label: 'Concessionária', labelEn: 'Dealership', icon: 'CarFront', emoji: '🚘', description: 'Concessionárias de veículos', color: '#2563EB', premium: true },
   { id: 'real-estate', label: 'Incorporadora', labelEn: 'Real Estate Developer', icon: 'Building2', emoji: '🏗️', description: 'Incorporadoras e construtoras', color: '#DC2626', premium: true },
   { id: 'real-estate', label: 'Condomínio', labelEn: 'Condominium', icon: 'DoorOpen', emoji: '🏢', description: 'Condomínios residenciais', color: '#7C3AED', premium: true },
@@ -120,7 +121,7 @@ export const NICHES: Niche[] = [
   { id: 'food', label: 'Marmitaria', labelEn: 'Meal Prep', icon: 'Package', emoji: '📦', description: 'Marmitas e alimentação saudável', color: '#16A34A', premium: true },
   { id: 'food', label: 'Food Truck', labelEn: 'Food Truck', icon: 'Truck', emoji: '🚚', description: 'Food trucks e trailers', color: '#EA580C', premium: true },
   { id: 'food', label: 'Doceria', labelEn: 'Candy Shop', icon: 'Candy', emoji: '🍬', description: 'Doces e sobremesas', color: '#F472B6', premium: true },
-  { id: 'food', label: 'Pet Shop', labelEn: 'Pet Shop', icon: 'Dog', emoji: '🐕', description: 'Lojas de animais e pet care', color: '#F97316', premium: true },
+  { id: 'pets', label: 'Pet Shop', labelEn: 'Pet Shop', icon: 'Dog', emoji: '🐕', description: 'Lojas de animais e pet care', color: '#F97316', premium: true },
   { id: 'food', label: 'Distribuidora', labelEn: 'Distributor', icon: 'Truck', emoji: '🚛', description: 'Distribuidoras alimentícias', color: '#475569', premium: true },
   { id: 'law', label: 'Cartório', labelEn: 'Notary', icon: 'FileText', emoji: '📜', description: 'Cartórios e tabelionatos', color: '#78350F', premium: true },
   { id: 'law', label: 'Consultoria Jurídica', labelEn: 'Legal Consulting', icon: 'BookOpen', emoji: '📚', description: 'Consultorias jurídicas', color: '#1E40AF', premium: true },
@@ -177,18 +178,26 @@ export const STYLES: StyleOption[] = [
   { id: 'apple', label: 'Estilo Apple', labelEn: 'Apple Style', icon: 'Apple', description: 'Premium, minimalista com tipografia impecável', preview: 'apple', category: 'estilo', premium: true },
   { id: 'premium', label: 'Premium', labelEn: 'Premium', icon: 'Gem', description: 'Design luxuoso com detalhes sofisticados', preview: 'premium', category: 'estilo', premium: true },
   { id: 'corporativo', label: 'Corporativo', labelEn: 'Corporate', icon: 'Briefcase', description: 'Visual profissional e sóbrio', preview: 'corporate', category: 'estilo' },
-  { id: 'elegante', label: 'Elegante', labelEn: 'Elegant', icon: 'Feather', description: 'Refinado com tipografia clássica', preview: 'elegant', category: 'estilo', premium: true },
-  { id: 'luxuoso', label: 'Luxuoso', labelEn: 'Luxurious', icon: 'Crown', description: 'Alto padrão com detalhes dourados', preview: 'luxury', category: 'estilo', premium: true },
-  { id: 'futurista', label: 'Futurista', labelEn: 'Futuristic', icon: 'Rocket', description: 'Design com linhas e grids futuristas', preview: 'futuristic', category: 'estilo', premium: true },
-  { id: 'cyberpunk', label: 'Cyberpunk', labelEn: 'Cyberpunk', icon: 'Cpu', description: 'Futurista com vibe cyberpunk', preview: 'cyberpunk', category: 'estilo', premium: true },
+  { id: 'elegante', label: 'Elegante', labelEn: 'Elegant', icon: 'Feather', description: 'Refinado com tipografia clássica', preview: 'elegant', category: 'estilo' },
+  { id: 'luxuoso', label: 'Luxuoso', labelEn: 'Luxurious', icon: 'Crown', description: 'Alto padrão com detalhes dourados', preview: 'luxury', category: 'estilo' },
+  { id: 'futurista', label: 'Futurista', labelEn: 'Futuristic', icon: 'Rocket', description: 'Design com linhas e grids futuristas', preview: 'futuristic', category: 'estilo' },
+  { id: 'cyberpunk', label: 'Cyberpunk', labelEn: 'Cyberpunk', icon: 'Cpu', description: 'Futurista com vibe cyberpunk', preview: 'cyberpunk', category: 'estilo' },
   { id: 'neon', label: 'Neon', labelEn: 'Neon', icon: 'Zap', description: 'Cores vibrantes e efeitos neon', preview: 'neon', category: 'estilo' },
   { id: 'glassmorphism', label: 'Glassmorphism', labelEn: 'Glassmorphism', icon: 'GlassWater', description: 'Efeito vidro com blur', preview: 'glass', category: 'estilo' },
-  { id: 'soft-ui', label: 'UI Suave', labelEn: 'Soft UI', icon: 'Cloud', description: 'Neumorphism leve e suave', preview: 'soft', category: 'estilo', premium: true },
+  { id: 'soft-ui', label: 'UI Suave', labelEn: 'Soft UI', icon: 'Cloud', description: 'Neumorphism leve e suave', preview: 'soft', category: 'estilo' },
   { id: 'editorial', label: 'Editorial', labelEn: 'Editorial', icon: 'BookOpen', description: 'Foco em tipografia e conteúdo', preview: 'editorial', category: 'estilo', premium: true },
   { id: 'gaming', label: 'Gamer', labelEn: 'Gaming', icon: 'Gamepad2', description: 'Estilo gamer com cores vibrantes', preview: 'gaming', category: 'estilo' },
-  { id: 'ecommerce', label: 'E-commerce Premium', labelEn: 'E-commerce Premium', icon: 'ShoppingBag', description: 'Loja virtual com design premium', preview: 'ecommerce', category: 'estilo', premium: true },
+  { id: 'ecommerce', label: 'E-commerce Premium', labelEn: 'E-commerce Premium', icon: 'ShoppingBag', description: 'Loja virtual com design premium', preview: 'ecommerce', category: 'estilo' },
   { id: 'saas', label: 'SaaS Moderno', labelEn: 'Modern SaaS', icon: 'Layout', description: 'Layout moderno para SaaS', preview: 'saas', category: 'estilo' },
   { id: 'awwwards', label: 'Estilo Awwwards', labelEn: 'Awwwards Style', icon: 'Trophy', description: 'Design premiado e inovador', preview: 'awwwards', category: 'estilo', premium: true },
+  { id: 'cinematic', label: 'Cinematic', labelEn: 'Cinematic', icon: 'Clapperboard', description: 'Composição de filme: luz dramática, profundidade e movimento de câmera', preview: 'cinematic', category: 'estilo', premium: true },
+  { id: 'magazine', label: 'Magazine', labelEn: 'Magazine', icon: 'Newspaper', description: 'Grid editorial de revista com hierarquia tipográfica forte', preview: 'magazine', category: 'estilo', premium: true },
+  { id: 'poster', label: 'Poster', labelEn: 'Poster', icon: 'Image', description: 'Peças gráficas tipo pôster com tipografia gigante e composição ousada', preview: 'poster', category: 'estilo', premium: true },
+  { id: 'brutalist', label: 'Brutalist', labelEn: 'Brutalist', icon: 'Landmark', description: 'Web bruta moderna: forte, direta e sem frescuras', preview: 'brutalist', category: 'estilo', premium: true },
+  { id: 'swiss-design', label: 'Swiss Design', labelEn: 'Swiss Design', icon: 'Ruler', description: 'Grid rígido, tipografia objetiva e precisão suíça', preview: 'swiss', category: 'estilo', premium: true },
+  { id: 'luxury-editorial', label: 'Luxury Editorial', labelEn: 'Luxury Editorial', icon: 'Diamond', description: 'Editorial de luxo com artesanato tipográfico e acabamento impecável', preview: 'luxury-editorial', category: 'estilo', premium: true },
+  { id: 'bento-premium', label: 'Bento Premium', labelEn: 'Bento Premium', icon: 'LayoutGrid', description: 'Grid bento organizado com cards elegantes e espaçamento generoso', preview: 'bento', category: 'estilo', premium: true },
+  { id: 'storytelling', label: 'Storytelling', labelEn: 'Storytelling', icon: 'ScrollText', description: 'Narrativa em scroll que conta uma história seção a seção', preview: 'storytelling', category: 'estilo', premium: true },
   { id: 'light-mode', label: 'Claro', labelEn: 'Light', icon: 'Sun', description: 'Tema claro e arejado', preview: 'light', category: 'tema' },
   { id: 'dark-mode', label: 'Escuro', labelEn: 'Dark', icon: 'Moon', description: 'Tema escuro elegante', preview: 'dark', category: 'tema' },
   { id: 'auto-theme', label: 'Auto (sistema)', labelEn: 'Auto (system)', icon: 'Monitor', description: 'Acompanha preferências do sistema', preview: 'auto', category: 'tema' },
@@ -248,6 +257,39 @@ export const ANIMATIONS_LIST: AnimationOption[] = [
   { id: 'blob-animation', label: 'Blob Animation', description: 'Formas blob animadas', category: 'efeitos', premium: true },
   { id: 'background-particles', label: 'Background Particles', description: 'Partículas no fundo', category: 'efeitos', premium: true },
   { id: 'mesh-gradient', label: 'Mesh Gradient Animation', description: 'Gradiente mesh animado', category: 'efeitos', premium: true },
+  { id: 'hero-animation', label: 'Hero Animation', description: 'Animação de entrada do hero', category: 'entrada' },
+  { id: 'glass-hover', label: 'Glass Hover', description: 'Efeito vidro no hover', category: 'interacao' },
+  { id: 'card-lift', label: 'Card Lift', description: 'Cards que elevam no hover', category: 'interacao' },
+  { id: 'cta-pulse', label: 'CTA Pulse', description: 'Pulso sutil no botão principal', category: 'interacao' },
+  { id: 'faq-animation', label: 'FAQ Animation', description: 'Acordeão animado do FAQ', category: 'interacao' },
+  { id: 'gallery-hover', label: 'Gallery Hover', description: 'Efeitos no hover da galeria', category: 'interacao' },
+  { id: 'loading-animation', label: 'Loading', description: 'Tela de loading estilizada', category: 'navegacao' },
+  { id: 'mouse-trail', label: 'Mouse Trail', description: 'Rastro de partículas no cursor', category: 'interacao', premium: true },
+  { id: 'sticky-scroll', label: 'Sticky Scroll', description: 'Seções com scroll fixo criativo', category: 'scroll', premium: true },
+  { id: 'bento-animation', label: 'Bento Animation', description: 'Grid bento animado', category: 'efeitos', premium: true },
+  { id: 'morphing-cards', label: 'Morphing Cards', description: 'Cards que se transformam', category: 'efeitos', premium: true },
+  { id: 'svg-draw', label: 'SVG Draw', description: 'Desenho de SVGs animado', category: 'efeitos', premium: true },
+  { id: 'timeline-animation', label: 'Timeline Animation', description: 'Linha do tempo animada', category: 'scroll', premium: true },
+];
+
+// Efeitos visuais premium (nível Awwwards) — selecionáveis no passo Design
+export const VISUAL_EFFECTS: { id: string; label: string; description: string }[] = [
+  { id: 'spotlight', label: 'Spotlight', description: 'Feixe de luz que segue o mouse no hero' },
+  { id: 'glow-cursor', label: 'Glow Cursor', description: 'Brilho suave acompanha o cursor' },
+  { id: 'noise-texture', label: 'Noise Texture', description: 'Textura de ruído sutil sobre o fundo' },
+  { id: 'gradient-mesh', label: 'Gradient Mesh', description: 'Gradiente mesh animado no fundo' },
+  { id: 'floating-shapes', label: 'Floating Shapes', description: 'Formas geométricas flutuando' },
+  { id: 'magnetic-buttons', label: 'Magnetic Buttons', description: 'Botões que atraem o cursor' },
+  { id: 'tilt-cards', label: 'Tilt Cards', description: 'Cards com inclinação 3D ao hover' },
+  { id: 'blur-navbar', label: 'Blur Navbar', description: 'Navbar com backdrop blur ao rolar' },
+  { id: 'animated-counter', label: 'Animated Counter', description: 'Contadores animados (stats)' },
+  { id: 'timeline', label: 'Timeline', description: 'Linha do tempo visual animada' },
+  { id: 'before-after', label: 'Before/After', description: 'Slider comparativo antes/depois' },
+  { id: 'faq', label: 'FAQ', description: 'Acordeão de perguntas frequentes' },
+  { id: 'infinite-marquee', label: 'Infinite Marquee', description: 'Faixa de conteúdo rolando infinito' },
+  { id: 'scroll-progress', label: 'Scroll Progress', description: 'Barra de progresso do scroll' },
+  { id: 'back-to-top', label: 'Back to Top', description: 'Botão flutuante de voltar ao topo' },
+  { id: 'custom-cursor', label: 'Custom Cursor', description: 'Cursor customizado com mix-blend-mode' },
 ];
 
 export const FONTS: FontOption[] = [
@@ -257,7 +299,148 @@ export const FONTS: FontOption[] = [
   { id: 'Poppins', label: 'Poppins', category: 'sans-serif', googleUrl: 'https://fonts.google.com/specimen/Poppins', preview: 'Poppins' },
   { id: 'Plus Jakarta Sans', label: 'Plus Jakarta Sans', category: 'sans-serif', googleUrl: 'https://fonts.google.com/specimen/Plus+Jakarta+Sans', preview: 'Plus Jakarta Sans' },
   { id: 'Space Grotesk', label: 'Space Grotesk', category: 'sans-serif', googleUrl: 'https://fonts.google.com/specimen/Space+Grotesk', preview: 'Space Grotesk' },
+  { id: 'Outfit', label: 'Outfit', category: 'sans-serif', googleUrl: 'https://fonts.google.com/specimen/Outfit', preview: 'Outfit' },
+  { id: 'DM Sans', label: 'DM Sans', category: 'sans-serif', googleUrl: 'https://fonts.google.com/specimen/DM+Sans', preview: 'DM Sans' },
 ];
+
+// Link real de importação para cada fonte (o Lovable/Bolt respeitam mais quando o prompt traz o <link>)
+export const FONT_IMPORT_URLS: Record<string, string> = {
+  'Inter': 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+  'Manrope': 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap',
+  'Satoshi': 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap',
+  'Poppins': 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap',
+  'Plus Jakarta Sans': 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap',
+  'Space Grotesk': 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap',
+  'Outfit': 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap',
+  'DM Sans': 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap',
+};
+
+// Paletas predefinidas — em vez de só color picker
+export const PALETTES: { id: string; label: string; primary: string; secondary: string }[] = [
+  { id: 'preto-dourado', label: 'Preto + Dourado', primary: '#0a0a0f', secondary: '#d4af37' },
+  { id: 'preto-branco', label: 'Preto + Branco', primary: '#0a0a0f', secondary: '#fafafa' },
+  { id: 'preto-vermelho', label: 'Preto + Vermelho', primary: '#0a0a0f', secondary: '#e11d48' },
+  { id: 'preto-amarelo', label: 'Preto + Amarelo', primary: '#0a0a0f', secondary: '#facc15' },
+  { id: 'azul-escuro', label: 'Azul Escuro', primary: '#0f172a', secondary: '#38bdf8' },
+  { id: 'verde-premium', label: 'Verde Premium', primary: '#052e16', secondary: '#22c55e' },
+  { id: 'branco-minimalista', label: 'Branco Minimalista', primary: '#ffffff', secondary: '#18181b' },
+  { id: 'personalizada', label: 'Personalizada', primary: '', secondary: '' },
+];
+
+// Modos de Inteligência IA — mudam completamente as instruções do prompt
+export const AI_MODES: { id: string; label: string; emoji: string; description: string; instructions: string }[] = [
+  {
+    id: 'conversao',
+    label: 'Conversão Máxima',
+    emoji: '🎯',
+    description: 'Site feito para vender: CTAs em destaque, prova social e zero atrito',
+    instructions: 'FOCO EM CONVERSÃO: coloque o CTA principal acima da dobra e repetido no meio/final. Use gatilhos de urgência e escassez quando fizer sentido. Prova social forte (depoimentos, números, avaliações) logo após o hero. Formulários curtos com poucos campos. Botões com texto de benefício ("Agendar meu horário" em vez de "Enviar"). Faça o caminho até a conversão ter no máximo 2 cliques.',
+  },
+  {
+    id: 'visual-premium',
+    label: 'Visual Premium',
+    emoji: '💎',
+    description: 'Estética de luxo: muito espaço, tipografia grande e fotografia impecável',
+    instructions: 'ESTÉTICA PREMIUM: muito espaço em branco, hierarquia tipográfica ousada (títulos grandes, escalas contrastantes), fotografia de alta qualidade com tratamento consistente, paleta restrita e sofisticada, detalhes de acabamento (linhas finas, cantos levemente arredondados, micro-animações sutis). Menos é mais — cada elemento com propósito claro. Sensação de marca cara e consolidada.',
+  },
+  {
+    id: 'agencia',
+    label: 'Agência',
+    emoji: '🏢',
+    description: 'Portfólio, cases, processos e resultados — como agência premiada',
+    instructions: 'PENSAMENTO DE AGÊNCIA: estrutura com cases/portfólio, processo de trabalho em etapas, resultados mensuráveis, depoimentos de clientes, equipe e diferenciais. Linguagem direta e profissional. CTA de orçamento/contato em destaque. Seções de serviços bem detalhadas com escopo. Números e métricas visíveis.',
+  },
+  {
+    id: 'awwwards',
+    label: 'Awwwards',
+    emoji: '🏆',
+    description: 'Padrão de site premiado: motion design e grids assimétricos',
+    instructions: 'PADRÃO AWWWARDS: experimentação visual ousada, grids assimétricos (60/40, elementos que atravessam colunas), motion design refinado com easing customizado, micro-interações em tudo que é clicável, typography como elemento visual principal, scroll criativo (mas nunca scroll-hijacking), imagens em composições inesperadas. Cada seção deve surpreender. Nada de padrões de template.',
+  },
+  {
+    id: 'ultra-criativo',
+    label: 'Ultra Criativo',
+    emoji: '🚀',
+    description: 'Quebra regras: layouts inesperados e storytelling visual',
+    instructions: 'ULTRA CRIATIVO: quebre convenções de layout com coragem — seções sobrepostas, elementos fora do grid, marquee com frases grandes, transições entre seções com identidade própria, storytelling visual guiando o scroll, experimentação de cor e forma. O site deve parecer um editorial de design de ponta. Mantenha legibilidade e performance — criatividade nunca pode quebrar a usabilidade.',
+  },
+];
+
+// Contexto inteligente por nicho — adiciona conhecimento específico ao prompt
+export const NICHE_CONTEXT: Record<string, string> = {
+  fitness: 'Contexto: negócio de fitness/treinamento. Destaque planos e mensalidades, avaliação física, horários de aulas, estrutura (aparelhos, estúdio), treinadores e depoimentos de alunos. Prova social com resultados e antes/depois funciona muito bem.',
+  beauty: 'Contexto: negócio de beleza/cuidados. Destaque serviços com preços, portfólio de trabalhos (fotos reais), agendamento online, equipe e produtos usados. Fotos de antes/depois e da estrutura são essenciais para gerar confiança.',
+  health: 'Contexto: negócio de saúde. Transmita confiança e autoridade: credenciais da equipe, especialidades, horários de atendimento, convênios aceitos, agendamento online e diferenciais de atendimento. Tom acolhedor e profissional.',
+  'real-estate': 'Contexto: negócio imobiliário. Destaque imóveis em destaque, busca/filtros, bairros atendidos, avaliações de clientes, equipe de corretores e canais de contato rápidos (WhatsApp). Tour virtual e fotos profissionais valorizam muito.',
+  food: 'Contexto: negócio de alimentação. Destaque cardápio, reservas e delivery, avaliações, galeria gastronômica (fotos que dão água na boca), localização e horário de funcionamento. Pratos em destaque e diferenciais (ingredientes, receitas autorais).',
+  fashion: 'Contexto: loja de moda. Destaque coleções, categorias de produtos, fotos de modelos com os produtos, tamanhos disponíveis, política de troca, frete e formas de pagamento. Visual aspiracional com tratamento consistente das fotos.',
+  ecommerce: 'Contexto: e-commerce. Destaque catálogo de produtos, busca e filtros, carrinho, checkout simplificado, avaliações de clientes, frete/prazo de entrega, garantias e políticas. Otimização de conversão é prioridade.',
+  law: 'Contexto: escritório jurídico. Transmita autoridade e confiança: áreas de atuação, equipe com OAB, resultados obtidos, depoimentos, artigos jurídicos e consulta/contato fácil. Tom sóbrio, sóbrio e formal.',
+  finance: 'Contexto: serviços financeiros/contábeis. Destaque serviços, especialidades, segurança e credibilidade, equipe, depoimentos e planos. Tom profissional com foco em confiança (números, certificações, casos).',
+  marketing: 'Contexto: agência de marketing. Destaque serviços (tráfego, social, branding), cases com resultados, processo de trabalho, equipe e depoimentos. Prova social com métricas e números de clientes.',
+  photography: 'Contexto: portfólio. O site É o portfólio: galeria em destaque com filtros por categoria, trabalhos em tela cheia, depoimentos de clientes, serviços e valores, contato direto. Visual limpo que deixa as fotos brilharem.',
+  saas: 'Contexto: SaaS/software. Destaque o produto com preview/hero animado, funcionalidades, planos e preços, integrações, FAQ, depoimentos e trial/CTA forte. Linguagem técnica mas acessível.',
+  tech: 'Contexto: empresa de tecnologia. Destaque soluções/serviços, stack, cases, time, contato comercial e diferenciais. Tom moderno, direto e inovador.',
+  travel: 'Contexto: turismo/hotelaria. Destaque acomodações/roteiros, galeria de fotos de alta qualidade, avaliações de hóspedes/clientes, reservas online, localização com mapa e diferenciais (café da manhã, piscina, etc).',
+  education: 'Contexto: educação. Destaque cursos/programas, metodologia, professores, depoimentos de alunos, matrícula e FAQ. Prova social forte (alunos formados, resultados).',
+  automotive: 'Contexto: serviços automotivos. Destaque serviços com preços, antes/depois (fotos de resultados), pacotes e orçamento online, agendamento e depoimentos. Confiança no trabalho e garantia.',
+  pets: 'Contexto: pet shop/pet care. Destaque produtos e serviços (banho e tosa, veterinário), fotos de pets felizes, planos de assinatura, agendamento e localização. Tom acolhedor e divertido.',
+  eventos: 'Contexto: eventos. Destaque tipos de evento atendidos, galeria de fotos reais, pacotes e orçamento, depoimentos e disponibilidade de agenda.',
+};
+
+// 20 nichos principais — mostrados primeiro no passo 1
+export const NICHES_PRIMARY: string[] = [
+  'Barbearia', 'Salão de Beleza', 'Academia', 'Clínica Médica', 'Clínica Odontológica',
+  'Restaurante', 'Pizzaria', 'Hamburgueria', 'Cafeteria', 'Imobiliária',
+  'Advocacia', 'Contabilidade', 'Pet Shop', 'Lava Jato', 'E-commerce',
+  'Agência de Marketing', 'Portfólio', 'Psicologia', 'Nutrição', 'Clínica de Estética',
+];
+
+// Frases de impacto sugeridas por nicho — preenchem a headline automaticamente
+export const HEADLINES_BY_NICHE: Record<string, string[]> = {
+  'Barbearia': ['Corte que muda sua vida', 'Onde estilo vira tradição', 'Mais que um corte, uma atitude', 'Seu visual, nossa arte'],
+  'Salão de Beleza': ['Realce sua beleza natural', 'Onde você brilha todos os dias', 'Beleza que transforma seu dia'],
+  'Academia': ['Transforme seu corpo, mude sua vida', 'Sua melhor versão começa aqui', 'Força, foco e resultado'],
+  'Clínica Médica': ['Sua saúde em boas mãos', 'Cuidado que você merece', 'Saúde e bem-estar para toda a família'],
+  'Clínica Odontológica': ['Sorria com confiança', 'Seu sorriso, nossa missão', 'Saúde bucal que transforma'],
+  'Psicologia': ['Sua mente merece cuidado', 'O primeiro passo para o bem-estar', 'Escuta acolhedora para sua jornada'],
+  'Nutrição': ['Coma bem, viva melhor', 'Nutrição que transforma hábitos', 'Sua saúde começa no prato'],
+  'Imobiliária': ['Encontre o lugar perfeito para viver', 'Seu novo lar começa aqui', 'O imóvel dos seus sonhos, perto de você'],
+  'Restaurante': ['Uma experiência gastronômica inesquecível', 'Sabor que encanta', 'A arte de cozinhar, o prazer de servir'],
+  'Pizzaria': ['A melhor pizza da cidade, na sua porta', 'Sabor que incanta sua vida', 'Massa artesanal, paixão em cada fatia'],
+  'Hamburgueria': ['O verdadeiro sabor do artesanal', 'Hambúrguer como tem que ser', 'Paixão em forma de hambúrguer'],
+  'Cafeteria': ['O melhor café da cidade', 'Seu momento perfeito começa aqui', 'Aroma que conquista'],
+  'Loja de Roupas': ['Vista seu estilo', 'Moda que expressa quem você é', 'Tendências que combinam com você'],
+  'Loja de Calçados': ['Passos que fazem a diferença', 'Conforto e estilo para você', 'Calce a sua melhor versão'],
+  'E-commerce': ['Tudo o que você precisa, em um só lugar', 'Compre fácil, receba rápido', 'Ofertas que valem a pena'],
+  'Advocacia': ['Justiça ao seu alcance', 'Defendendo seus direitos com excelência', 'Segurança jurídica para suas decisões'],
+  'Contabilidade': ['Seus números em boas mãos', 'Contabilidade que simplifica sua vida', 'Crescimento com segurança fiscal'],
+  'Agência de Marketing': ['Sua marca, no lugar certo', 'Resultados que vendem', 'Estratégia que move seu negócio'],
+  'Portfólio': ['Histórias em cada clique', 'Imagens que falam por si', 'Capturando momentos que importam'],
+  'Hotel': ['Sua estadia perfeita começa aqui', 'Conforto e sofisticação para você', 'Bem-vindo ao seu refúgio'],
+  'Turismo': ['Explore o mundo com a gente', 'Sua próxima aventura começa aqui', 'Viagens inesquecíveis ao seu alcance'],
+  'Pet Shop': ['Amor em forma de cuidado', 'Seu pet merece o melhor', 'Cuidado e carinho para seu melhor amigo'],
+  'Lava Jato': ['Seu carro como novo', 'Brilho que impressiona', 'Cuidado completo para seu veículo'],
+  'Oficina Mecânica': ['Seu carro em boas mãos', 'Confiança e segurança para dirigir', 'Mecânica honesta e eficiente'],
+  'Auto Center': ['Cuidado total para o seu veículo', 'Tecnologia e confiança automotiva', 'Seu carro, nossa prioridade'],
+  'Concessionária': ['O carro dos seus sonhos está aqui', 'Novos caminhos começam hoje', 'Direção com confiança'],
+  'Startup': ['Inovação que transforma', 'O futuro começa aqui', 'Tecnologia para crescer'],
+  'Empresa de Tecnologia': ['Tecnologia que impulsiona seu negócio', 'Soluções inovadoras para o seu sucesso', 'O futuro da sua empresa'],
+  'SaaS': ['Sua solução em um só lugar', 'Tecnologia que simplifica', 'O poder da automação ao seu alcance'],
+  'Escola': ['Educação que transforma futuros', 'Aprender é uma aventura', 'Formando cidadãos do amanhã'],
+  'Curso Online': ['Aprenda no seu ritmo', 'Seu futuro começa hoje', 'Conhecimento sem fronteiras'],
+  'Padaria': ['Sabor de casa, frescor de todo dia', 'O pão quentinho que você ama', 'Tradição e sabor em cada fornada'],
+  'Sorveteria': ['O sabor que derrete seu coração', 'Momentos doces, memórias felizes', 'Gelado, cremoso e irresistível'],
+  'Açaí': ['Energia e sabor em cada colherada', 'O açaí mais cremoso da cidade', 'Saudável, gelado e delicioso'],
+  'Mercado': ['Tudo fresquinho, perto de você', 'Qualidade e economia no mesmo lugar', 'Do mercado pra sua mesa'],
+  'Corretora de Seguros': ['Proteja o que importa', 'Sua tranquilidade começa aqui', 'Segurança para o seu futuro'],
+  'Incorporadora': ['Onde seus sonhos ganham endereço', 'Projetos que transformam cidades', 'Viva em um lugar extraordinário'],
+  'Condomínio': ['Viver bem, todos os dias', 'Seu refúgio no coração da cidade', 'Estrutura completa para sua família'],
+  'Arquiteto': ['Projetos que contam histórias', 'Espaços que inspiram', 'Arquitetura com alma'],
+  'Decoração': ['Transforme sua casa em um lar', 'Ambientes que refletem você', 'Design que abraça'],
+  'Clínica de Estética': ['Realce sua beleza natural', 'Cuidados que renovam', 'Sua melhor versão, visível'],
+  default: ['Sua melhor escolha começa aqui', 'Excelência que você pode confiar', 'Feito especialmente para você'],
+};
 
 export const STRUCTURES: StructureOption[] = [
   { id: 'navbar-hero', label: 'Navbar + Hero', icon: 'LayoutDashboard', description: 'Topo com navegação e banner principal', category: 'principais' },
@@ -345,34 +528,6 @@ export const OBJECTIVES: ObjectiveOption[] = [
   { id: 'custom', label: 'Personalizado', icon: 'Pencil', description: 'Descreva seu projeto', category: 'custom' },
 ];
 
-export const TECHNOLOGIES: TechnologyOption[] = [
-  { id: 'auto', label: 'Escolher automaticamente a melhor stack', category: 'auto', icon: '🤖', popular: true },
-  { id: 'React', label: 'React', category: 'frontend', icon: '⚛️', popular: false },
-  { id: 'Next.js', label: 'Next.js', category: 'frontend', icon: '▲', popular: true },
-  { id: 'Vue.js', label: 'Vue', category: 'frontend', icon: '💚', popular: false },
-  { id: 'Angular', label: 'Angular', category: 'frontend', icon: '🔴', popular: false },
-  { id: 'Tailwind CSS', label: 'Tailwind CSS', category: 'estilo', icon: '🎨', popular: true },
-  { id: 'Styled Components', label: 'Styled Components', category: 'estilo', icon: '💅', popular: false },
-  { id: 'SCSS', label: 'SCSS', category: 'estilo', icon: '🎭', popular: false },
-  { id: 'Shadcn/UI', label: 'Shadcn/UI', category: 'ui', icon: '🧩', popular: true },
-  { id: 'Material UI', label: 'Material UI', category: 'ui', icon: '🟩', popular: false },
-  { id: 'Chakra UI', label: 'Chakra UI', category: 'ui', icon: '🟣', popular: false },
-  { id: 'Framer Motion', label: 'Framer Motion', category: 'animacoes', icon: '🎬', popular: true },
-  { id: 'GSAP', label: 'GSAP', category: 'animacoes', icon: '🎞️', popular: false },
-  { id: 'Anime.js', label: 'Anime.js', category: 'animacoes', icon: '✨', popular: false },
-  { id: 'Node.js', label: 'Node.js', category: 'backend', icon: '🟢', popular: false },
-  { id: 'NestJS', label: 'NestJS', category: 'backend', icon: '🏗️', popular: false },
-  { id: 'Laravel', label: 'Laravel', category: 'backend', icon: '🔶', popular: false },
-  { id: 'Supabase', label: 'Supabase', category: 'database', icon: '⚡', popular: true },
-  { id: 'PostgreSQL', label: 'PostgreSQL', category: 'database', icon: '🐘', popular: false },
-  { id: 'Firebase', label: 'Firebase', category: 'database', icon: '🔥', popular: false },
-  { id: 'MongoDB', label: 'MongoDB', category: 'database', icon: '🍃', popular: false },
-  { id: 'Vercel', label: 'Vercel', category: 'hosting', icon: '▲', popular: true },
-  { id: 'Railway', label: 'Railway', category: 'hosting', icon: '🚂', popular: false },
-  { id: 'Render', label: 'Render', category: 'hosting', icon: '🖥️', popular: false },
-  { id: 'AWS', label: 'AWS', category: 'hosting', icon: '☁️', popular: false },
-];
-
 export const CONTRACT_TYPES: ContractTypeOption[] = [
   { id: 'site', label: 'Desenvolvimento de Site', icon: 'Globe', description: 'Criação de sites profissionais', defaultClauses: ['escopo', 'prazo', 'valor', 'pagamento', 'entrega', 'revisao', 'rescisao', 'confidencialidade', 'propriedade', 'garantia', 'foro'] },
   { id: 'landing-page', label: 'Landing Page', icon: 'Layout', description: 'Páginas de conversão', defaultClauses: ['escopo', 'prazo', 'valor', 'pagamento', 'entrega', 'revisao', 'rescisao'] },
@@ -424,6 +579,47 @@ export const SIDEBAR_NAV: NavItem[] = [
   { id: 'premium', label: 'Premium', icon: 'Crown', path: '/dashboard/plans' },
   { id: 'profile', label: 'Perfil', icon: 'User', path: '/dashboard/profile' },
   { id: 'settings', label: 'Configurações', icon: 'Settings', path: '/dashboard/settings' },
+];
+
+export interface SidebarGroup {
+  label: string;
+  icon: string;
+  items: NavItem[];
+}
+
+export const SIDEBAR_GROUPS: SidebarGroup[] = [
+  {
+    label: 'Criar',
+    icon: 'Zap',
+    items: [
+      { id: 'new-prompt', label: 'Novo Prompt', icon: 'Sparkles', path: '/dashboard/wizard', highlight: true },
+      { id: 'contracts', label: 'Contratos', icon: 'FileSignature', path: '/dashboard/contracts' },
+      { id: 'proposals', label: 'Propostas', icon: 'FileText', path: '/dashboard/proposals' },
+      { id: 'budgets', label: 'Orçamentos', icon: 'DollarSign', path: '/dashboard/budgets' },
+      { id: 'briefings', label: 'Briefings', icon: 'ClipboardList', path: '/dashboard/briefings' },
+      { id: 'script', label: 'Script de Vendas', icon: 'PhoneCall', path: '/dashboard/script' },
+    ],
+  },
+  {
+    label: 'Gerenciar',
+    icon: 'FolderKanban',
+    items: [
+      { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard', path: '/dashboard' },
+      { id: 'projects', label: 'Projetos', icon: 'FolderKanban', path: '/dashboard/projects' },
+      { id: 'history', label: 'Histórico', icon: 'History', path: '/dashboard/history' },
+      { id: 'favorites', label: 'Favoritos', icon: 'Heart', path: '/dashboard/favorites' },
+      { id: 'find-stores', label: 'Encontrar Lojas', icon: 'Store', path: '/dashboard/find-stores' },
+    ],
+  },
+  {
+    label: 'Conta',
+    icon: 'User',
+    items: [
+      { id: 'premium', label: 'Premium', icon: 'Crown', path: '/dashboard/plans', badge: 'PRO' },
+      { id: 'profile', label: 'Perfil', icon: 'User', path: '/dashboard/profile' },
+      { id: 'settings', label: 'Configurações', icon: 'Settings', path: '/dashboard/settings' },
+    ],
+  },
 ];
 
 export const LANDING_NAV_ITEMS = [
@@ -531,4 +727,40 @@ export const COLOR_PALETTES = [
   { name: 'Amarelo Sun', colors: ['#EAB308', '#CA8A04', '#FDE047', '#713F12', '#FFFFFF'] },
   { name: 'Cinza Elegance', colors: ['#6B7280', '#4B5563', '#9CA3AF', '#111827', '#FFFFFF'] },
   { name: 'Dark Premium', colors: ['#A855F7', '#D946EF', '#1F2937', '#050505', '#FFFFFF'] },
+];
+
+// ── Seções recomendadas por categoria de nicho ──
+// Usado quando o usuário não escolhe a estrutura manualmente: o briefing
+// já sai com as seções certas para o nicho (em vez de genéricas).
+export const NICHE_STRUCTURES: Record<string, string[]> = {
+  fitness: ['navbar-hero', 'sobre', 'diferenciais', 'precos', 'agendamento', 'equipe', 'galeria', 'depoimentos', 'contato', 'cta-final', 'footer'],
+  beauty: ['navbar-hero', 'sobre', 'servicos', 'galeria', 'precos', 'agendamento', 'depoimentos', 'localizacao', 'contato', 'cta-final', 'footer'],
+  health: ['navbar-hero', 'sobre', 'servicos', 'equipe', 'diferenciais', 'depoimentos', 'agendamento', 'localizacao', 'faq', 'contato', 'cta-final', 'footer'],
+  'real-estate': ['navbar-hero', 'sobre', 'projetos', 'diferenciais', 'equipe', 'depoimentos', 'localizacao', 'contato', 'cta-final', 'footer'],
+  food: ['navbar-hero', 'sobre', 'galeria', 'promocoes', 'depoimentos', 'localizacao', 'contato', 'faq', 'footer'],
+  fashion: ['navbar-hero', 'sobre', 'produtos', 'galeria', 'promocoes', 'depoimentos', 'localizacao', 'contato', 'footer'],
+  ecommerce: ['navbar-hero', 'produtos', 'promocoes', 'depoimentos', 'faq', 'contato', 'footer'],
+  law: ['navbar-hero', 'sobre', 'servicos', 'equipe', 'diferenciais', 'blog', 'faq', 'contato', 'cta-final', 'footer'],
+  finance: ['navbar-hero', 'sobre', 'servicos', 'diferenciais', 'estatisticas', 'blog', 'faq', 'contato', 'cta-final', 'footer'],
+  marketing: ['navbar-hero', 'sobre', 'servicos', 'projetos', 'clientes', 'depoimentos', 'blog', 'contato', 'cta-final', 'footer'],
+  photography: ['navbar-hero', 'sobre', 'portfolio', 'galeria', 'depoimentos', 'precos', 'contato', 'cta-final', 'footer'],
+  saas: ['navbar-hero', 'sobre', 'servicos', 'como-funciona', 'precos', 'depoimentos', 'faq', 'blog', 'contato', 'cta-final', 'footer'],
+  tech: ['navbar-hero', 'sobre', 'servicos', 'como-funciona', 'projetos', 'clientes', 'blog', 'contato', 'cta-final', 'footer'],
+  travel: ['navbar-hero', 'sobre', 'servicos', 'galeria', 'depoimentos', 'precos', 'blog', 'localizacao', 'contato', 'footer'],
+  education: ['navbar-hero', 'sobre', 'servicos', 'equipe', 'como-funciona', 'depoimentos', 'precos', 'faq', 'contato', 'cta-final', 'footer'],
+  automotive: ['navbar-hero', 'sobre', 'servicos', 'diferenciais', 'galeria', 'agendamento', 'depoimentos', 'localizacao', 'contato', 'cta-final', 'footer'],
+  pet: ['navbar-hero', 'sobre', 'servicos', 'galeria', 'diferenciais', 'depoimentos', 'agendamento', 'localizacao', 'contato', 'footer'],
+  events: ['navbar-hero', 'sobre', 'servicos', 'galeria', 'depoimentos', 'precos', 'agendamento', 'contato', 'cta-final', 'footer'],
+};
+
+export const DEFAULT_STRUCTURES = ['navbar-hero', 'sobre', 'servicos', 'diferenciais', 'contato', 'cta-final', 'footer'];
+
+// ── CTA principal ──
+// A ação de conversão que o site deve priorizar (vira destaque no hero).
+export const CTA_OPTIONS = [
+  { id: 'whatsapp', label: 'Chamar no WhatsApp', emoji: '💬' },
+  { id: 'agendar', label: 'Agendar / Reservar', emoji: '📅' },
+  { id: 'comprar', label: 'Comprar / Assinar', emoji: '🛒' },
+  { id: 'contato', label: 'Formulário de Contato', emoji: '✉️' },
+  { id: 'ligar', label: 'Ligar', emoji: '📞' },
 ];

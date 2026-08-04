@@ -25,13 +25,17 @@ async function request<T>(method: string, endpoint: string, body?: unknown): Pro
   if (!res.ok) {
     const err = await res.text();
     let msg: string;
+    let code: string | undefined;
     try {
       const parsed = JSON.parse(err);
       msg = parsed.error || parsed.detail || err;
+      code = parsed.code;
     } catch {
       msg = err;
     }
-    throw new Error(msg);
+    const e = new Error(msg) as Error & { code?: string };
+    if (code) e.code = code;
+    throw e;
   }
   return res.json();
 }
@@ -54,6 +58,8 @@ export const authAPI = {
 
 export const usageAPI = {
   getUsage: () => get<{ prompts: { used: number; limit: number }; contracts: { used: number; limit: number }; projects: { used: number; limit: number } }>('usage'),
+  // Geração local do wizard: registra uso e aplica o limite do plano
+  trackGeneration: () => post<{ ok: boolean; used: number; limit: number }>('generation-track'),
 };
 
 export const plansAPI = {

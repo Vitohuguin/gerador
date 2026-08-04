@@ -59,7 +59,7 @@ export default function SettingsPage() {
   const themeOptions: { value: Theme; label: string; icon: React.ElementType }[] = [
     { value: 'dark', label: 'Escuro', icon: Moon },
     { value: 'light', label: 'Claro', icon: Sun },
-    { value: 'auto', label: 'Automatico', icon: Monitor },
+    { value: 'auto', label: 'Automático', icon: Monitor },
   ];
 
   return (

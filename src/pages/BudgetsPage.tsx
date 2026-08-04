@@ -98,7 +98,7 @@ export default function BudgetsPage() {
                 a.click();
                 URL.revokeObjectURL(url);
               }} className="btn-glass p-2"><FileDown size={16} /></button>
-              <button onClick={() => { if (window.confirm('Tem certeza que deseja excluir este orcamento?')) deleteBudget(budget.id); }} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all"><Trash2 size={16} /></button>
+              <button onClick={() => { if (window.confirm('Tem certeza que deseja excluir este orçamento?')) deleteBudget(budget.id); }} className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all"><Trash2 size={16} /></button>
             </div>
           </div>
           <div className="overflow-x-auto">

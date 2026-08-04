@@ -53,6 +53,16 @@ const users = {
     const { data } = await getAdmin().from('users').update(filtered).eq('id', id).select().single();
     return data;
   },
+  async remove(id) {
+    // Remove dados do usuário em todas as tabelas (Supabase + SQLite local)
+    const { error: errSubs } = await getAdmin().from('subscriptions').delete().eq('userId', id);
+    const { error: errPay } = await getAdmin().from('payment_history').delete().eq('userId', id);
+    const { error: errUser } = await getAdmin().from('users').delete().eq('id', id);
+    sqlite.prepare('DELETE FROM usage_tracking WHERE userId = ?').run(id);
+    if (errUser) throw errUser;
+    // Ignora erros das tabelas relacionadas que podem não existir/no-op
+    return !errUser;
+  },
 };
 
 const subscriptions = {

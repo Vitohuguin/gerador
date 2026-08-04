@@ -6,6 +6,8 @@ import {
   ChevronDown, Circle,
 } from 'lucide-react';
 import { useProjectStore } from '@/store/projectStore';
+import { useAuthStore } from '@/store/authStore';
+import { UpgradeBlock } from '@/components/UpgradeBlock';
 import { NICHES, PLATFORMS } from '@/lib/constants';
 import { cn, formatDate, generateId } from '@/lib/utils';
 import type { Project, ProjectStatus, NicheCategory, Platform } from '@/types';
@@ -45,7 +47,7 @@ function ProjectModal({
     status: project?.status || 'draft' as ProjectStatus,
     niche: project?.niche || ('tech' as NicheCategory),
     platform: project?.platform || ('lovable' as Platform),
-    color: project?.color || '#A855F7',
+    color: project?.color || '#8B5CF6',
     tags: project?.tags?.join(', ') || '',
   });
 
@@ -156,6 +158,12 @@ export default function ProjectsPage() {
     }
     setEditingProject(null);
   };
+
+  const user = useAuthStore(s => s.user);
+
+  if (user?.plan === 'none') {
+    return <UpgradeBlock message="Assine um plano para criar e gerenciar projetos." />;
+  }
 
   if (projects.length === 0 && !showModal) {
     return (

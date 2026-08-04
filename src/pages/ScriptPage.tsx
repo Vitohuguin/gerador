@@ -7,6 +7,8 @@ import {
   ChevronDown, ChevronUp, Play,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/store/authStore'
+import { UpgradeBlock } from '@/components/UpgradeBlock'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -75,6 +77,12 @@ function Divider() {
 
 export default function ScriptPage() {
   const [openStep, setOpenStep] = useState<number | null>(null)
+
+  const user = useAuthStore(s => s.user)
+
+  if (user?.plan === 'none') {
+    return <UpgradeBlock message="Assine um plano para acessar os scripts de vendas." />;
+  }
 
   const toggle = (n: number) => setOpenStep(openStep === n ? null : n)
 

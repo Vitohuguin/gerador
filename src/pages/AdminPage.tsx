@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Shield, Search, ChevronDown, Check, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Shield, Search, ChevronDown, Check, AlertCircle, Trash2, X } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +24,8 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<UserRecord | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -91,6 +93,27 @@ export default function AdminPage() {
     }
   }
 
+  async function handleDelete(target: UserRecord) {
+    setDeleting(target.id);
+    setMessage(null);
+    try {
+      const res = await fetch(`/api/admin/users/${target.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erro ao apagar usuário');
+      setUsers(prev => prev.filter(u => u.id !== target.id));
+      setConfirmDelete(null);
+      setMessage({ type: 'success', text: `Conta "${target.name || target.email}" apagada com sucesso` });
+    } catch (err: any) {
+      setConfirmDelete(null);
+      setMessage({ type: 'error', text: err.message || 'Erro ao apagar usuário' });
+    } finally {
+      setDeleting(null);
+    }
+  }
+
   if (isAdmin === null) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -154,18 +177,19 @@ export default function AdminPage() {
                 <th className="px-4 py-3 font-medium">Empresa</th>
                 <th className="px-4 py-3 font-medium">Cadastro</th>
                 <th className="px-4 py-3 font-medium text-right">Plano</th>
+                <th className="px-4 py-3 font-medium text-right">Ações</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-zinc-500">
+                  <td colSpan={6} className="px-4 py-12 text-center text-zinc-500">
                     Carregando...
                   </td>
                 </tr>
               ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-zinc-500">
+                  <td colSpan={6} className="px-4 py-12 text-center text-zinc-500">
                     Nenhum usuário encontrado
                   </td>
                 </tr>
@@ -215,6 +239,22 @@ export default function AdminPage() {
                         <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500" />
                       </div>
                     </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => setConfirmDelete(u)}
+                          disabled={deleting === u.id}
+                          title={`Apagar conta de ${u.name || u.email}`}
+                          className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-40"
+                        >
+                          {deleting === u.id ? (
+                            <span className="inline-block w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+                          ) : (
+                            <Trash2 size={16} />
+                          )}
+                        </button>
+                      </div>
+                    </td>
                   </motion.tr>
                 ))
               )}
@@ -222,6 +262,87 @@ export default function AdminPage() {
           </table>
         </div>
       </div>
+
+      <AnimatePresence>
+        {confirmDelete && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            onClick={() => !deleting && setConfirmDelete(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 10 }}
+              onClick={e => e.stopPropagation()}
+              className="glass p-6 rounded-2xl max-w-md w-full border border-red-500/20"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-red-500/10 text-red-400">
+                    <Trash2 size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Apagar conta</h3>
+                    <p className="text-xs text-zinc-500">Ação irreversível</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setConfirmDelete(null)}
+                  disabled={!!deleting}
+                  className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-40"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <p className="text-sm text-zinc-300 mb-2">
+                Tem certeza que deseja apagar a conta de{' '}
+                <strong className="text-white">{confirmDelete.name || confirmDelete.email}</strong>?
+              </p>
+              <p className="text-xs text-zinc-500 mb-5">
+                Email: <span className="text-zinc-400">{confirmDelete.email}</span>
+                {confirmDelete.plan !== 'none' && (
+                  <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-300 text-[10px] uppercase">
+                    Plano {confirmDelete.plan}
+                  </span>
+                )}
+                <br />
+                Todos os dados (assinatura, histórico, projetos, limites) serão removidos permanentemente.
+              </p>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setConfirmDelete(null)}
+                  disabled={!!deleting}
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-40"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => handleDelete(confirmDelete)}
+                  disabled={!!deleting}
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-red-500/90 hover:bg-red-500 text-white transition-colors disabled:opacity-50 inline-flex items-center gap-2"
+                >
+                  {deleting ? (
+                    <>
+                      <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Apagando...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={15} />
+                      Apagar conta
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
